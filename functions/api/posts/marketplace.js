@@ -10,6 +10,8 @@ export async function onRequestGet({ env }) {
                 u.first_name || ' ' || u.last_name as seller_name, 
                 u.department as seller_department,
                 u.id as seller_id,
+                (SELECT COUNT(*) FROM vouches WHERE post_id = p.id) as vouch_count,
+                (SELECT COUNT(*) FROM vouches WHERE receiver_id = u.id) as seller_vouches,
                 (SELECT image_url FROM post_images WHERE post_id = p.id AND is_main = 1 LIMIT 1) as main_image,
                 (SELECT image_url FROM post_images WHERE post_id = p.id AND is_main = 0 LIMIT 1) as sub_image
             FROM posts p
@@ -30,7 +32,9 @@ export async function onRequestGet({ env }) {
             
             return {
                 ...post,
-                images: images
+                images: images,
+                vouch_count: post.vouch_count || 0,
+                seller_vouches: post.seller_vouches || 0
             };
         });
 
@@ -40,7 +44,10 @@ export async function onRequestGet({ env }) {
             posts: processedPosts
         }), {
             status: 200,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 
+                'Content-Type': 'application/json',
+                'Cache-Control': 'no-store'
+            }
         });
         
     } catch (error) {
@@ -51,3 +58,4 @@ export async function onRequestGet({ env }) {
         });
     }
 }
+

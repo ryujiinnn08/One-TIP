@@ -303,11 +303,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="product-info">
                     <div class="product-card-title">${product.title}</div>
                     <div class="product-card-price">₱${product.price.toLocaleString()}</div>
-                    <div class="product-card-seller">Seller: ${product.seller_name}</div>
+                    <div class="product-card-seller">Seller: ${product.seller_name || 'Unknown'}</div>
                     <div class="product-card-meta">
-                        <span class="product-card-vouches" title="${product.vouch_count} vouches">
+                        <span class="product-card-vouches" title="${product.vouch_count || 0} vouches">
                             <img src="Images/star-icon.svg" alt="Vouches" style="width: 14px; height: 14px; margin-right: 2px; filter: brightness(0) saturate(100%) invert(68%) sepia(86%) saturate(2476%) hue-rotate(359deg);">
-                            ${product.vouch_count}
+                            ${product.vouch_count || 0}
                         </span>
                         <span class="product-card-campus">${product.campus || 'Arlegui'}</span>
                     </div>
@@ -461,7 +461,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <button class="modal-vouch-btn ${product.vouched_by_user ? 'vouched' : ''}" id="modalVouchBtn" title="${product.vouched_by_user ? 'Remove vouch' : 'Vouch for this item'}" style="margin-left: 1rem; background: ${product.vouched_by_user ? '#ffc107' : 'transparent'}; border: 2px solid #ffc107; color: ${product.vouched_by_user ? 'white' : '#ffc107'}; padding: 0.5rem 1rem; border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s;">
                     <img src="Images/star-icon.svg" alt="Vouch" style="width: 16px; height: 16px; filter: ${product.vouched_by_user ? 'brightness(0) invert(1)' : 'brightness(0) saturate(100%) invert(68%) sepia(86%) saturate(2476%) hue-rotate(359deg)'};">
                     <span>${product.vouched_by_user ? 'Vouched' : 'Vouch'}</span>
-                    <span class="vouch-count-badge" style="background: rgba(255,255,255,0.3); padding: 0.1rem 0.5rem; border-radius: 12px; font-size: 0.85rem;">${product.vouch_count}</span>
+                    <span class="vouch-count-badge" style="background: rgba(255,255,255,0.3); padding: 0.1rem 0.5rem; border-radius: 12px; font-size: 0.85rem;">${product.vouch_count || 0}</span>
                 </button>
             `;
             
@@ -485,7 +485,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 Listed ${formatTimeAgo(product.created_at)}
                 <span style="margin-left: 1rem; color: #ffc107;">
                     <img src="Images/star-icon.svg" alt="Vouches" style="width: 16px; height: 16px; vertical-align: middle; filter: brightness(0) saturate(100%) invert(68%) sepia(86%) saturate(2476%) hue-rotate(359deg);">
-                    ${product.vouch_count} vouches
+                    ${product.vouch_count || 0} vouches
                 </span>
             `;
         }
@@ -496,7 +496,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const ratingCount = document.getElementById('ratingCount');
 
         if (sellerName) sellerName.textContent = product.seller_name || 'Unknown';
-        if (sellerDepartment) sellerDepartment.textContent = `${product.seller_department || 'Unknown'} Department`;
+        if (sellerDepartment) sellerDepartment.textContent = `${formatDepartment(product.seller_department)} Department`;
         if (ratingCount) ratingCount.textContent = `(${product.seller_vouches || 0} vouches)`;
 
         // Update contact availability
@@ -679,6 +679,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function capitalizeWords(str) {
         return str.split(' ').map(word =>
+            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        ).join(' ');
+    }
+
+    function formatDepartment(dept) {
+        if (!dept) return 'Unknown';
+        return dept.replace(/_/g, ' ').split(' ').map(word =>
             word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
         ).join(' ');
     }

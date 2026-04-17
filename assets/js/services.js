@@ -309,8 +309,8 @@ document.addEventListener('DOMContentLoaded', function () {
                         <div class="service-card-price">Starting at ₱${service.price}/hr</div>
                         <div class="service-card-rating">
                             <span class="stars">★</span>
-                            <span class="rating">${service.provider_rating}</span>
-                            <span class="reviews">(${service.provider_reviews})</span>
+                            <span class="rating">${service.provider_rating || 0}</span>
+                            <span class="reviews">(${service.provider_reviews || 0})</span>
                         </div>
                     </div>
                     <div class="service-card-footer">
@@ -319,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <span class="service-tag">${getDeliveryDisplayName(service.delivery_time)}</span>
                             <span class="service-tag" style="color: #ffc107;">
                                 <img src="Images/star-icon.svg" alt="Vouches" style="width: 14px; height: 14px; vertical-align: middle; filter: brightness(0) saturate(100%) invert(68%) sepia(86%) saturate(2476%) hue-rotate(359deg);">
-                                ${service.vouch_count} vouches
+                                ${service.vouch_count || 0} vouches
                             </span>
                         </div>
                     </div>
@@ -673,7 +673,14 @@ document.addEventListener('DOMContentLoaded', function () {
             '1_month': '1 Month',
             'custom': 'Custom'
         };
-        return deliveryTimes[deliveryTime] || deliveryTime;
+        return deliveryTimes[deliveryTime] || deliveryTime || 'Custom';
+    }
+
+    function formatDepartment(dept) {
+        if (!dept) return 'Unknown';
+        return dept.replace(/_/g, ' ').split(' ').map(word =>
+            word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+        ).join(' ');
     }
 
     function setupServiceModal() {
@@ -754,7 +761,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <button class="modal-vouch-btn ${service.vouched_by_user ? 'vouched' : ''}" id="modalServiceVouchBtn" title="${service.vouched_by_user ? 'Remove vouch' : 'Vouch for this service'}" style="margin-left: 1rem; background: ${service.vouched_by_user ? '#ffc107' : 'transparent'}; border: 2px solid #ffc107; color: ${service.vouched_by_user ? 'white' : '#ffc107'}; padding: 0.5rem 1rem; border-radius: 25px; cursor: pointer; font-size: 0.9rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s;">
                     <img src="Images/star-icon.svg" alt="Vouch" style="width: 16px; height: 16px; filter: ${service.vouched_by_user ? 'brightness(0) invert(1)' : 'brightness(0) saturate(100%) invert(68%) sepia(86%) saturate(2476%) hue-rotate(359deg)'};">
                     <span>${service.vouched_by_user ? 'Vouched' : 'Vouch'}</span>
-                    <span class="vouch-count-badge" style="background: rgba(255,255,255,0.3); padding: 0.1rem 0.5rem; border-radius: 12px; font-size: 0.85rem;">${service.vouch_count}</span>
+                    <span class="vouch-count-badge" style="background: rgba(255,255,255,0.3); padding: 0.1rem 0.5rem; border-radius: 12px; font-size: 0.85rem;">${service.vouch_count || 0}</span>
                 </button>
             `;
             
@@ -779,7 +786,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 Listed ${formatTimeAgo(service.created_at)}
                 <span style="margin-left: 1rem; color: #ffc107;">
                     <img src="Images/star-icon.svg" alt="Vouches" style="width: 16px; height: 16px; vertical-align: middle; filter: brightness(0) saturate(100%) invert(68%) sepia(86%) saturate(2476%) hue-rotate(359deg);">
-                    ${service.vouch_count} vouches
+                    ${service.vouch_count || 0} vouches
                 </span>
             `;
         }
@@ -791,7 +798,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const serviceRatingCount = document.getElementById('serviceRatingCount');
 
         if (serviceProviderName) serviceProviderName.textContent = service.provider_name || 'Unknown';
-        if (serviceProviderDepartment) serviceProviderDepartment.textContent = `${service.provider_department || 'Unknown'} Department`;
+        if (serviceProviderDepartment) serviceProviderDepartment.textContent = `${formatDepartment(service.provider_department)} Department`;
         if (serviceProviderRating) {
             const rating = service.provider_rating || 0;
             const fullStar = '<img src="https://img.icons8.com/fluency/16/star.png" alt="Star" style="width: 16px; height: 16px; vertical-align: middle;">';
