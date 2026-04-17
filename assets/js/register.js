@@ -48,8 +48,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 signupBtn.disabled = false;
             }
         } catch (error) {
-            console.error('API Connect Error:', error);
-            alert('Failed to connect to server. Ensure you are running `npx wrangler pages dev .`');
+            console.error('Registration API error:', error);
+            alert('Unable to connect to the server. Please check your internet connection and try again. If the problem persists, contact support.');
             signupBtn.textContent = 'Sign up now';
             signupBtn.disabled = false;
         }

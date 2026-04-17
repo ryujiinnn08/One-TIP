@@ -52,8 +52,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 loginBtn.disabled = false;
             }
         } catch (error) {
-            console.error('Login error:', error);
-            alert('Could not connect to the authentication server. Are you running `npx wrangler pages dev`?');
+            console.error('Login API error:', error);
+            alert('Unable to connect to the server. Please check your internet connection and try again. If the problem persists, contact support.');
             loginBtn.textContent = 'Login now';
             loginBtn.disabled = false;
         }
