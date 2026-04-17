@@ -1040,33 +1040,23 @@ document.addEventListener('DOMContentLoaded', function () {
     window.clearServiceFilters = clearServiceFilters;
     
     // Simplified create post modal function
-    window.openCreatePostModal = function (type = 'service', editId = null) {
-        console.log('Opening create post modal:', type, editId);
+    window.openCreatePostModal = function (type = 'service') {
+        console.log('Opening create post modal:', type);
         const modal = document.getElementById('createPostModal');
         if (modal) {
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
             
-            // Try multiple times to load the form
-            let attempts = 0;
-            const maxAttempts = 5;
-            
-            const tryLoad = function() {
-                if (typeof window.loadCreatePostForm === 'function') {
-                    window.loadCreatePostForm(type, editId);
-                } else if (typeof loadCreatePostForm === 'function') {
-                    loadCreatePostForm(type, editId);
-                } else if (attempts < maxAttempts) {
-                    attempts++;
-                    console.log(`Attempt ${attempts} to load form...`);
-                    setTimeout(tryLoad, 200);
-                } else {
-                    console.error('Failed to load create post form after multiple attempts');
-                    alert('Unable to load the form. Please refresh the page and try again.');
-                }
-            };
-            
-            tryLoad();
+            if (typeof window.loadCreatePostForm === 'function') {
+                window.loadCreatePostForm(type);
+            } else {
+                console.error('loadCreatePostForm function not found. Make sure create-post.js is loaded.');
+                setTimeout(() => {
+                    if (typeof window.loadCreatePostForm === 'function') {
+                        window.loadCreatePostForm(type);
+                    }
+                }, 200);
+            }
         } else {
             console.error('Create post modal not found');
         }

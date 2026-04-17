@@ -870,12 +870,12 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     // Global function for opening create post modal
-    window.openCreatePostModal = function (type = 'marketplace', editId = null) {
+    window.openCreatePostModal = function (type = 'marketplace') {
         const modal = document.getElementById('createPostModal');
         if (modal) {
             modal.style.display = 'block';
             if (typeof window.loadCreatePostForm === 'function') {
-                window.loadCreatePostForm(type, editId);
+                window.loadCreatePostForm(type);
             } else {
                 console.error("window.loadCreatePostForm is not a function. create-post.js might not be loaded properly.");
             }

@@ -44,10 +44,10 @@ document.addEventListener('DOMContentLoaded', function() {
         currentPostType = type;
         
         // Update Modal styling for creating
-        const modalHeader = document.querySelector('.modal-header h2');
-        const modalDesc = document.querySelector('.modal-body p');
-        const typeSelection = document.querySelector('.post-type-selection');
-        const submitBtn = document.querySelector('.btn-primary');
+        const modalHeader = document.querySelector('#createPostModal .modal-header h2');
+        const modalDesc = document.querySelector('#createPostModal .modal-body p');
+        const typeSelection = document.querySelector('#createPostModal .post-type-selection');
+        const submitBtn = document.querySelector('#createPostModal .btn-primary');
         
         if (modalHeader) {
             modalHeader.textContent = 'Create New Post';

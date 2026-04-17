@@ -690,21 +690,20 @@ document.addEventListener('DOMContentLoaded', function () {
     window.openReportModal = openReportModal;
 
     // Global function for opening create post modal
-    window.openCreatePostModal = function (type = 'marketplace', editId = null) {
-        console.log('Opening create post modal:', type, editId);
+    window.openCreatePostModal = function (type = 'marketplace') {
+        console.log('Opening create post modal:', type);
         const modal = document.getElementById('createPostModal');
         if (modal) {
             modal.style.display = 'block';
             document.body.style.overflow = 'hidden';
             
-            // Wait for create-post.js to load, then call its function
-            if (typeof loadCreatePostForm === 'function') {
-                loadCreatePostForm(type, editId);
+            if (typeof window.loadCreatePostForm === 'function') {
+                window.loadCreatePostForm(type);
             } else {
                 console.error('loadCreatePostForm function not found. Make sure create-post.js is loaded.');
                 setTimeout(() => {
-                    if (typeof loadCreatePostForm === 'function') {
-                        loadCreatePostForm(type, editId);
+                    if (typeof window.loadCreatePostForm === 'function') {
+                        window.loadCreatePostForm(type);
                     }
                 }, 100);
             }
