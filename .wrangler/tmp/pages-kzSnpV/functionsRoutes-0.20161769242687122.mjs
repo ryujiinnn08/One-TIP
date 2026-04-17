@@ -2,12 +2,12 @@ import { onRequestPost as __api_auth_login_js_onRequestPost } from "/Users/aaron
 import { onRequestPost as __api_auth_register_js_onRequestPost } from "/Users/aaronruzgal/WEBSYSTEMS/OneTIP-Backup2-main 2/functions/api/auth/register.js"
 import { onRequestGet as __api_dashboard_stats_js_onRequestGet } from "/Users/aaronruzgal/WEBSYSTEMS/OneTIP-Backup2-main 2/functions/api/dashboard/stats.js"
 import { onRequestPost as __api_posts_create_js_onRequestPost } from "/Users/aaronruzgal/WEBSYSTEMS/OneTIP-Backup2-main 2/functions/api/posts/create.js"
-import { onRequestDelete as __api_posts_delete_js_onRequestDelete } from "/Users/aaronruzgal/WEBSYSTEMS/OneTIP-Backup2-main 2/functions/api/posts/delete.js"
-import { onRequestGet as __api_posts_get_js_onRequestGet } from "/Users/aaronruzgal/WEBSYSTEMS/OneTIP-Backup2-main 2/functions/api/posts/get.js"
 import { onRequestGet as __api_posts_marketplace_js_onRequestGet } from "/Users/aaronruzgal/WEBSYSTEMS/OneTIP-Backup2-main 2/functions/api/posts/marketplace.js"
 import { onRequestGet as __api_posts_services_js_onRequestGet } from "/Users/aaronruzgal/WEBSYSTEMS/OneTIP-Backup2-main 2/functions/api/posts/services.js"
 import { onRequestPost as __api_posts_update_js_onRequestPost } from "/Users/aaronruzgal/WEBSYSTEMS/OneTIP-Backup2-main 2/functions/api/posts/update.js"
 import { onRequestGet as __api_user_listings_js_onRequestGet } from "/Users/aaronruzgal/WEBSYSTEMS/OneTIP-Backup2-main 2/functions/api/user/listings.js"
+import { onRequestDelete as __api_posts__id__js_onRequestDelete } from "/Users/aaronruzgal/WEBSYSTEMS/OneTIP-Backup2-main 2/functions/api/posts/[id].js"
+import { onRequestGet as __api_posts__id__js_onRequestGet } from "/Users/aaronruzgal/WEBSYSTEMS/OneTIP-Backup2-main 2/functions/api/posts/[id].js"
 
 export const routes = [
     {
@@ -39,20 +39,6 @@ export const routes = [
       modules: [__api_posts_create_js_onRequestPost],
     },
   {
-      routePath: "/api/posts/delete",
-      mountPath: "/api/posts",
-      method: "DELETE",
-      middlewares: [],
-      modules: [__api_posts_delete_js_onRequestDelete],
-    },
-  {
-      routePath: "/api/posts/get",
-      mountPath: "/api/posts",
-      method: "GET",
-      middlewares: [],
-      modules: [__api_posts_get_js_onRequestGet],
-    },
-  {
       routePath: "/api/posts/marketplace",
       mountPath: "/api/posts",
       method: "GET",
@@ -79,5 +65,19 @@ export const routes = [
       method: "GET",
       middlewares: [],
       modules: [__api_user_listings_js_onRequestGet],
+    },
+  {
+      routePath: "/api/posts/:id",
+      mountPath: "/api/posts",
+      method: "DELETE",
+      middlewares: [],
+      modules: [__api_posts__id__js_onRequestDelete],
+    },
+  {
+      routePath: "/api/posts/:id",
+      mountPath: "/api/posts",
+      method: "GET",
+      middlewares: [],
+      modules: [__api_posts__id__js_onRequestGet],
     },
   ]
