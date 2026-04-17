@@ -1,14 +1,10 @@
 # Cloudflare Pages Configuration
-# D1 Database binding "DB" configured via dashboard
-name = "one-tip-marketplace"
+name = "onetip"
 compatibility_date = "2024-10-06"
-
-# Serve static assets directly from the root folder
-[assets]
-directory = "."
+pages_build_output_dir = "."
 
 # Cloudflare D1 Database Binding
 [[d1_databases]]
 binding = "DB"
-database_name = "one-tip-db"
+database_name = "onetip"
 database_id = "c4e7f8d5-c6c3-4b62-855d-02d531dee71a"
