@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONE-TiP - Choose Username</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <img src="Images/TIPImage-Login.jpg" alt="School Building" class="background-image">
+        </div>
+        <div class="right-panel">
+            <div class="form-container">
+                <div class="logo">
+                    <a href="index.html" style="display: inline-block;">
+                        <img src="Images/LOGO-LONG.png" alt="ONE-TiP" class="logo-img">
+                    </a>
+                </div>
+                <p class="subtitle">You passed the test!</p>
+                
+                <h2>Choose your username</h2>
+                <p class="description">This will be your unique identifier. Choose something memorable!</p>
+                
+                <form id="usernameForm" class="username-form" action="backend/set-username.php" method="POST">
+                    <input type="hidden" name="action" value="set_username">
+                    <input type="hidden" name="user_id" id="userId" value="">
+                    <input type="hidden" name="csrf_token" id="csrfToken" value="">
+                    
+                    <div class="input-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required 
+                               pattern="[a-zA-Z0-9_]{3,20}" minlength="3" maxlength="20">
+                        <div id="usernameStatus" class="status-message"></div>
+                    </div>
+                    
+                    <div class="username-rules">
+                        <h4>Username rules:</h4>
+                        <ul>
+                            <li>3-20 characters</li>
+                            <li>Letters, numbers, and underscores only</li>
+                            <li>Must be unique</li>
+                            <li>No rude or explicit language</li>
+                            <li>That's it!</li>
+                        </ul>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary" id="completeSetupBtn">Complete setup with @username</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="assets/js/username.js"></script>
+</body>
+</html>

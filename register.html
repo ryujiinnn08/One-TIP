@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONE-TiP - Sign Up</title>
+    <meta name="csrf-token" content="<?php echo csrf_token(); ?>">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <img src="Images/TIPImage-Login.jpg" alt="School Building" class="background-image">
+        </div>
+        <div class="right-panel">
+            <div class="form-container">
+                <div class="logo">
+                    <a href="index.html" style="display: inline-block;">
+                        <img src="Images/LOGO-LONG.png" alt="ONE-TiP" class="logo-img">
+                    </a>
+                </div>
+                <p class="subtitle">Sign up for an account</p>
+                
+                <form id="registerForm" class="register-form" action="backend/register.php" method="POST">
+                    <input type="hidden" name="action" value="register">
+                    <input type="hidden" name="csrf_token" id="csrfToken" value="">
+                    
+                    <div class="form-row">
+                        <div class="input-group half">
+                            <label for="firstName">First Name :</label>
+                            <input type="text" id="firstName" name="first_name" required minlength="2" maxlength="50">
+                        </div>
+                        <div class="input-group half">
+                            <label for="lastName">Last Name :</label>
+                            <input type="text" id="lastName" name="last_name" required minlength="2" maxlength="50">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="input-group half">
+                            <label for="tipEmail">TiP Email Id :</label>
+                            <input type="email" id="tipEmail" name="tip_email" required pattern=".*@tip\.edu\.ph$">
+                        </div>
+                        <div class="input-group half">
+                            <label for="studentNo">Student No. :</label>
+                            <input type="text" id="studentNo" name="student_number" required pattern="[0-9-]{8,15}">
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="input-group half">
+                            <label for="password">Password :</label>
+                            <input type="password" id="password" name="password" required minlength="8">
+                        </div>
+                        <div class="input-group half">
+                            <label for="confirmPassword">Confirm Password :</label>
+                            <input type="password" id="confirmPassword" name="confirm_password" required>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="department">Department :</label>
+                        <select id="department" name="department" required>
+                            <option value="">Select Department</option>
+                            <option value="college_of_arts">College of Arts</option>
+                            <option value="college_of_engineering">College of Engineering and Architecture</option>
+                            <option value="college_of_computer_science">College of Computer Science</option>
+                            <option value="college_of_business">College of Business Education</option>
+                        </select>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label class="checkbox-container">
+                            <input type="checkbox" id="termsAgreement" name="terms_agreement" required>
+                            <span class="checkmark"></span>
+                            I agree to the <a href="terms.html" target="_blank">Terms of Service</a> and <a href="privacy.html" target="_blank">Privacy Policy</a>
+                        </label>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary" id="signupBtn">Sign up now</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="assets/js/register.js"></script>
+</body>
+</html>

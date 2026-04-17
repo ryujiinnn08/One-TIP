@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONE-TiP - Search Results</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/search-results.css">
+</head>
+<body>
+    <meta name="csrf-token" content="<?php echo csrf_token(); ?>">
+
+    <!-- Navigation Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <a href="dashboard.html">
+                    <img src="Images/LOGO-LONG.png" alt="ONE-TiP" class="header-logo">
+                </a>
+            </div>
+
+            <div class="search-section">
+                <input type="text" id="globalSearch" placeholder="Search marketplace and services..." class="search-input">
+                <button type="button" class="search-btn" id="searchBtn">
+                    <img src="Images/black-search.svg" alt="Search" class="search-icon">
+                </button>
+            </div>
+
+            <div class="user-section">
+                <button type="button" class="btn-primary create-post-btn" id="createPostBtn">+ Create Post</button>
+
+                <div class="notification-icon" id="notificationIcon">
+                    <span class="notification-badge" id="notificationBadge">3</span>
+                    <img src="Images/notification-icon.svg" alt="Notifications" class="notification-img">
+                </div>
+
+                <div class="user-profile" id="userProfile">
+                    <img src="Images/profile-icon.png" alt="User" class="profile-img" id="userAvatar">
+                    <span class="username" id="displayUsername">@username</span>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-tabs">
+            <a href="dashboard.html" class="nav-tab">Dashboard</a>
+            <a href="marketplace.html" class="nav-tab">Marketplace</a>
+            <a href="services.html" class="nav-tab">Services</a>
+        </nav>
+    </header>
+
+    <!-- Search Results Section -->
+    <main class="search-results-main">
+        <div class="search-container">
+            <!-- Search Results Header -->
+            <div class="search-header">
+                <h1>Search Results</h1>
+                <div class="search-info">
+                    <span class="search-query">Results for "<span id="currentQuery"></span>"</span>
+                    <span class="results-count" id="resultsCount">0 results found</span>
+                </div>
+            </div>
+
+            <!-- Search Filters -->
+            <div class="search-filters">
+                <!-- Filter Tabs -->
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-type="all">All Results</button>
+                    <button class="filter-tab" data-type="marketplace">Marketplace</button>
+                    <button class="filter-tab" data-type="services">Services</button>
+                </div>
+
+                <div class="sort-options">
+                    <label for="searchSort">Sort by:</label>
+                    <select id="searchSort" class="sort-select">
+                        <option value="relevance">Most Relevant</option>
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="price_low">Price: Low to High</option>
+                        <option value="price_high">Price: High to Low</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Search Results Content -->
+            <div class="search-results-content">
+                <div class="results-grid" id="resultsGrid">
+                    <!-- Results will be loaded here -->
+                </div>
+
+                <div class="no-results" id="noResults" style="display: none;">
+                    <div class="no-results-icon">
+                        <img src="Images/black-search.svg" alt="Search" style="width: 64px; height: 64px; opacity: 0.5;">
+                    </div>
+                    <h3>No results found</h3>
+                    <p>Try adjusting your search terms or browse our categories</p>
+                    <div class="suggestion-links">
+                        <a href="marketplace.html" class="btn-secondary">Browse Marketplace</a>
+                        <a href="services.html" class="btn-secondary">Browse Services</a>
+                    </div>
+                </div>
+
+                <div class="load-more-section">
+                    <button class="btn-secondary" id="loadMoreResults" style="display: none;">Load More Results</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- User Profile Dropdown -->
+    <div id="userProfileDropdown" class="profile-dropdown" style="display: none;">
+        <div class="profile-header">
+            <img src="Images/profile-icon.png" alt="User" class="dropdown-avatar">
+            <div class="profile-details">
+                <div class="profile-name" id="profileName">User Name</div>
+                <div class="profile-email" id="profileEmail">user@tip.edu.ph</div>
+            </div>
+        </div>
+        <div class="profile-menu">
+            <a href="#" class="menu-item" data-action="edit-profile">
+                <img src="Images/profile-icon.svg" alt="Edit Profile" class="menu-icon-img">
+                Edit Profile
+            </a>
+            <a href="#" class="menu-item" data-action="settings">
+                <img src="Images/gear-icon.svg" alt="Settings" class="menu-icon-img">
+                Settings
+            </a>
+            <a href="#" class="menu-item" data-action="help">
+                <img src="Images/question-mark-icon.svg" alt="Help" class="menu-icon-img">
+                Help & Support
+            </a>
+            <hr>
+            <a href="#" class="menu-item" data-action="logout">
+                <img src="Images/exit-icon.svg" alt="Logout" class="menu-icon-img">
+                Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/search-results.js"></script>
+    <script src="assets/js/notifications.js"></script>
+</body>
+</html>

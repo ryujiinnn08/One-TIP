@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONE-TiP - Services</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/services.css">
+</head>
+
+<body>
+    <meta name="csrf-token" content="<?php echo csrf_token(); ?>">
+
+    <!-- Navigation Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <a href="dashboard.html" style="display: flex; align-items: center; text-decoration: none;">
+                    <img src="Images/LOGO-LONG.png" alt="ONE-TiP" class="header-logo">
+                </a>
+            </div>
+
+            <div class="search-section">
+                <input type="text" id="globalSearch" placeholder="Search services..." class="search-input">
+                <button type="button" class="search-btn" id="searchBtn">
+                    <img src="Images/grey-search-bar.svg" alt="Search" class="search-icon">
+                </button>
+            </div>
+
+            <div class="user-section">
+                <button type="button" class="btn-primary create-post-btn" id="createPostBtn">+ Create Post</button>
+
+                <div class="notification-icon" id="notificationIcon">
+                    <span class="notification-badge" id="notificationBadge">3</span>
+                    <img src="Images/notification-icon.svg" alt="Notifications" class="notification-img">
+                </div>
+
+                <div class="user-profile" id="userProfile">
+                    <img src="Images/profile-icon.png" alt="User" class="profile-img" id="userAvatar">
+                    <span class="username" id="displayUsername">@username</span>
+                </div>
+            </div>
+        </div>
+
+        <nav class="nav-tabs">
+            <a href="dashboard.html" class="nav-tab">Dashboard</a>
+            <a href="marketplace.html" class="nav-tab">Marketplace</a>
+            <button class="nav-tab active" data-section="services">Services</button>
+        </nav>
+    </header>
+
+    <!-- Services Main Content -->
+    <main class="services-main">
+        <div class="services-container">
+            <!-- Services Header -->
+            <div class="services-header">
+                <div class="services-banner">
+                    <img src="Images/LOGO-LONG.png" alt="ONE-TiP Services" class="services-logo">
+                    <h1>Services</h1>
+                    <p>Get help from talented TiP students!</p>
+                </div>
+            </div>
+
+            <!-- Services Filter Section -->
+            <div class="services-filter-section">
+                <div class="services-filter-row">
+                    <div class="services-filter-group">
+                        <label for="servicesSortBy">Sort by:</label>
+                        <select id="servicesSortBy" class="services-filter-select">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="price_low">Price: Low to High</option>
+                            <option value="price_high">Price: High to Low</option>
+                            <option value="rating">Highest Rated</option>
+                            <option value="popular">Most Popular</option>
+                        </select>
+                    </div>
+
+                    <div class="services-filter-group">
+                        <label for="servicesCategory">Categories:</label>
+                        <select id="servicesCategory" class="services-filter-select">
+                            <option value="all">All Categories</option>
+                            <option value="tutoring">Tutoring & Education</option>
+                            <option value="design">Graphic Design</option>
+                            <option value="writing">Writing & Translation</option>
+                            <option value="programming">Programming & Tech</option>
+                            <option value="photography">Photography & Video</option>
+                            <option value="music">Music & Audio</option>
+                            <option value="business">Business & Marketing</option>
+                            <option value="lifestyle">Lifestyle Services</option>
+                            <option value="crafts">Arts & Crafts</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="services-filter-group">
+                        <label for="servicesPriceRange">Price Range:</label>
+                        <select id="servicesPriceRange" class="services-filter-select">
+                            <option value="all">All Prices</option>
+                            <option value="0-50">₱0 - ₱50/hr</option>
+                            <option value="50-100">₱50 - ₱100/hr</option>
+                            <option value="100-200">₱100 - ₱200/hr</option>
+                            <option value="200-500">₱200 - ₱500/hr</option>
+                            <option value="500+">₱500+/hr</option>
+                        </select>
+                    </div>
+
+                    <div class="services-filter-group">
+                        <label for="servicesDeliveryTime">Delivery Time:</label>
+                        <select id="servicesDeliveryTime" class="services-filter-select">
+                            <option value="all">All Delivery Times</option>
+                            <option value="1_day">1 Day</option>
+                            <option value="2_days">2 Days</option>
+                            <option value="3_days">3 Days</option>
+                            <option value="1_week">1 Week</option>
+                            <option value="2_weeks">2 Weeks</option>
+                            <option value="1_month">1 Month</option>
+                            <option value="custom">Custom Timeline</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Services Grid -->
+            <div class="services-section">
+                <div class="services-grid" id="servicesGrid">
+                    <!-- Services will be loaded here -->
+                </div>
+
+                <div class="services-load-more-section">
+                    <button class="btn-secondary" id="loadMoreServices">Load More Services</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Report Modal -->
+    <div id="reportModal" class="modal report-modal" style="display: none;">
+        <div class="modal-content report-modal-content"
+            style="max-width: 500px; margin: 5% auto; background: white; border-radius: 15px; overflow: hidden; position: relative;">
+            <div class="report-modal-header"
+                style="background: linear-gradient(135deg, #dc3545, #c82333); color: white; padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                <img src="Images/flag-icon.svg" alt="Report"
+                    style="width: 32px; height: 32px; filter: brightness(0) invert(1);">
+                <h3 style="margin: 0; font-size: 1.5rem;">Report Service</h3>
+            </div>
+
+            <div class="report-modal-body" style="padding: 2rem;">
+                <div
+                    style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; color: #856404; font-size: 0.9rem;">
+                    <strong style="display: block; margin-bottom: 0.5rem;">⚠️ Important:</strong>
+                    False reports may result in account restrictions. Please only report content that violates our
+                    community guidelines.
+                </div>
+
+                <form id="reportForm" class="report-form">
+                    <div class="input-group" style="margin-bottom: 1.5rem;">
+                        <label
+                            style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333;">Reporting:
+                            <strong id="reportItemTitle">Service</strong>
+                        </label>
+                    </div>
+
+                    <div class="input-group" style="margin-bottom: 1.5rem;">
+                        <label for="reportReason"
+                            style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333;">Reason for
+                            Report *</label>
+                        <select id="reportReason" name="reason" required
+                            style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 8px; font-family: inherit; font-size: 1rem;">
+                            <option value="">Select a reason...</option>
+                            <option value="inappropriate">Inappropriate Content</option>
+                            <option value="spam">Spam or Misleading</option>
+                            <option value="fraud">Fraud or Scam</option>
+                            <option value="duplicate">Duplicate Posting</option>
+                            <option value="prohibited">Prohibited Service</option>
+                            <option value="harassment">Harassment or Bullying</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group" style="margin-bottom: 1.5rem;">
+                        <label for="reportDetails"
+                            style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333;">Additional
+                            Details (Optional)</label>
+                        <textarea id="reportDetails" name="details"
+                            placeholder="Provide any additional information that might help us review this report..."
+                            maxlength="500"
+                            style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 8px; font-family: inherit; font-size: 1rem; resize: vertical; min-height: 100px;"></textarea>
+                        <small
+                            style="display: block; margin-top: 0.5rem; color: #666; font-size: 0.85rem;">0/500
+                            characters</small>
+                    </div>
+                </form>
+            </div>
+
+            <div class="report-modal-footer"
+                style="padding: 1.5rem 2rem; background: #f8f9fa; display: flex; gap: 1rem; justify-content: flex-end;">
+                <button type="button" class="btn-secondary" id="cancelReportBtn">Cancel</button>
+                <button type="submit" form="reportForm" class="btn-primary" id="submitReportBtn"
+                    style="background: #dc3545;">Submit Report</button>
+            </div>
+
+            <button class="close" id="closeReportModal"
+                style="position: absolute; top: 15px; right: 15px; color: white; font-size: 1.8rem; background: rgba(255,255,255,0.2); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">&times;
+            </button>
+        </div>
+    </div>
+
+    <!-- Service Details Modal -->
+    <div id="serviceModal" class="modal service-modal" style="display: none;">
+        <div class="modal-content service-modal-content">
+            <button class="service-modal-close" id="closeServiceModal">&times;</button>
+
+            <div class="service-modal-body">
+                <div class="service-portfolio-section">
+                    <div class="service-portfolio-header">
+                        <h3>Previous Work</h3>
+                        <p>Portfolio & Examples</p>
+                    </div>
+                    <div class="portfolio-gallery" id="portfolioGallery">
+                        <p style="text-align: center; color: #666; padding: 2rem;">No portfolio items available</p>
+                    </div>
+                </div>
+
+                <div class="service-details-section">
+                    <div class="service-header">
+                        <h2 id="serviceTitle">Service Name</h2>
+                        <p class="service-listing-date" id="serviceDate">Listed recently</p>
+                    </div>
+
+                    <div class="service-price-section">
+                        <div class="service-price-badge">
+                            <span class="service-price" id="servicePrice">Starting at ₱0/hr</span>
+                            <div class="service-delivery-time" id="serviceDeliveryTime">Delivery: Not specified</div>
+                            <div class="service-price-type" id="servicePriceType">Negotiable - Cash on meetup</div>
+                        </div>
+                    </div>
+
+                    <div class="service-description">
+                        <h4>Service Description</h4>
+                        <p id="serviceDescription">Service description will be displayed here...</p>
+                    </div>
+
+                    <div class="service-provider-section">
+                        <h4>Service Provider Information</h4>
+                        <div class="service-provider-card">
+                            <div class="service-provider-avatar">
+                                <img id="serviceProviderAvatar" src="Images/profile-icon.png" alt="Provider"
+                                    class="service-provider-img">
+                            </div>
+                            <div class="service-provider-details">
+                                <div class="service-provider-name" id="serviceProviderName">Provider Name</div>
+                                <div class="service-provider-department" id="serviceProviderDepartment">Department</div>
+                                <div class="service-provider-rating">
+                                    <span class="service-rating-stars" id="serviceProviderRating">★★★★★</span>
+                                    <span class="service-rating-count" id="serviceRatingCount">(0 reviews)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="service-contact-availability">
+                            <div class="service-availability-item">
+                                <strong>Chat availability:</strong>
+                                <span id="serviceChatAvailability">Not specified</span>
+                            </div>
+                            <div class="service-availability-item">
+                                <strong>Meetup:</strong>
+                                <span id="serviceMeetupAvailability">Not specified</span>
+                            </div>
+                        </div>
+
+                        <div class="service-contact-buttons">
+                            <button class="service-btn-contact service-btn-facebook" id="serviceContactFacebook">
+                                <img src="Images/facebook-icon.svg" alt="Facebook" class="service-contact-icon">
+                                Facebook
+                            </button>
+                            <button class="service-btn-contact service-btn-email" id="serviceContactEmail">
+                                <img src="Images/email-icon.svg" alt="Email" class="service-contact-icon">
+                                Email
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Post Modal -->
+    <div id="createPostModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Post</h2>
+                <span class="close" id="closeModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Share your items or services with the ONE-TiP community</p>
+
+                <!-- Post Type Selection -->
+                <div class="post-type-selection">
+                    <button class="post-type-btn" data-type="marketplace" id="marketplaceBtn">Marketplace Item</button>
+                    <button class="post-type-btn active" data-type="service" id="serviceBtn">Service Offer</button>
+                </div>
+
+                <!-- Dynamic Form Container -->
+                <div id="createPostForm">
+                    <!-- Forms will be loaded here via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Panel -->
+    <div id="notificationPanel" class="notification-panel">
+        <div class="notification-header">
+            <h3>Notifications</h3>
+            <span class="notification-count" id="notificationCount">3 unread notifications</span>
+            <div class="notification-actions">
+                <button class="notification-btn active" data-filter="all">All</button>
+                <button class="notification-btn" data-filter="unread">Unread (3)</button>
+                <button class="notification-btn" id="markAllRead">Mark all read</button>
+            </div>
+        </div>
+        <div class="notification-list" id="notificationList">
+            <!-- Notifications will be loaded here via JavaScript -->
+        </div>
+    </div>
+
+    <!-- User Profile Dropdown -->
+    <div id="userProfileDropdown" class="profile-dropdown" style="display: none;">
+        <div class="profile-header">
+            <img src="Images/profile-icon.png" alt="User" class="dropdown-avatar">
+            <div class="profile-details">
+                <div class="profile-name" id="profileName">User Name</div>
+                <div class="profile-email" id="profileEmail">user@tip.edu.ph</div>
+            </div>
+        </div>
+        <div class="profile-menu">
+            <a href="edit-profile.html" class="menu-item" data-action="edit-profile">
+                <img src="Images/profile-icon.svg" alt="Edit Profile" class="menu-icon-img">
+                Edit Profile
+            </a>
+            <a href="#" class="menu-item" data-action="settings">
+                <img src="Images/gear-icon.svg" alt="Settings" class="menu-icon-img">
+                Settings
+            </a>
+            <a href="#" class="menu-item" data-action="help">
+                <img src="Images/question-mark-icon.svg" alt="Help" class="menu-icon-img">
+                Help & Support
+            </a>
+            <hr>
+            <a href="#" class="menu-item" data-action="logout">
+                <img src="Images/exit-icon.svg" alt="Logout" class="menu-icon-img">
+                Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/ai-recommendations.js"></script>
+    <script src="assets/js/chat.js"></script>
+    <script src="assets/js/services.js"></script>
+    <script src="assets/js/create-post.js"></script>
+    <script src="assets/js/notifications.js"></script>
+    
+    <!-- Demo Helper Script -->
+    <script>
+        // Press "D" to enable debug mode
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'd' || e.key === 'D') {
+                if (window.aiRecommendations) {
+                    window.aiRecommendations.enableDebug();
+                    alert('🤖 AI Debug Mode Enabled!\n\nWatch the bottom-right corner for tracking.\n\nClick services to see recommendations in the search bar!');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

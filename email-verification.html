@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONE-TiP - Verify Email</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="left-panel">
+            <img src="Images/TIPImage-Login.jpg" alt="School Building" class="background-image">
+        </div>
+        <div class="right-panel">
+            <div class="form-container">
+                <div class="logo">
+                    <a href="index.html" style="display: inline-block;">
+                        <img src="Images/LOGO-LONG.png" alt="ONE-TiP" class="logo-img">
+                    </a>
+                </div>
+                <p class="subtitle">Almost there- We're verifying your email!</p>
+                
+                <div class="icon-circle email-icon">
+                    <span class="icon">📧</span>
+                </div>
+                
+                <h2>Verify your email</h2>
+                <p class="description">We've sent a 6-digit verification code to <strong id="userEmail">mfaruzgal@tip.edu.ph</strong></p>
+                
+                <form id="emailVerificationForm" class="email-form" action="backend/verify-email.php" method="POST">
+                    <input type="hidden" name="action" value="verify_email">
+                    <input type="hidden" name="user_id" id="userId" value="">
+                    <input type="hidden" name="csrf_token" id="csrfToken" value="">
+                    
+                    <div class="input-group">
+                        <label for="verificationCode">Verification Code</label>
+                        <input type="text" id="verificationCode" name="verification_code" 
+                               placeholder="Enter 6-Digit Code" maxlength="6" pattern="[0-9]{6}" required>
+                    </div>
+                    
+                    <div class="timer-container">
+                        <span class="timer-icon">⏰</span>
+                        <span id="timer">Code expires in 5:00</span>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary" id="verifyEmailBtn">Verify Email</button>
+                    
+                    <button type="button" class="btn-link" id="resendCodeBtn">Resend Code</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script src="assets/js/email-verification.js"></script>
+</body>
+</html>

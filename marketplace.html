@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONE-TiP - Marketplace</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+</head>
+
+<body>
+    <meta name="csrf-token" content="<?php echo csrf_token(); ?>">
+
+    <!-- Navigation Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <a href="dashboard.html" style="display: flex; align-items: center; text-decoration: none;">
+                    <img src="Images/LOGO-LONG.png" alt="ONE-TiP" class="header-logo">
+                </a>
+            </div>
+
+            <!-- Global Search Bar -->
+            <div class="search-section">
+                <input type="text" id="globalSearch" placeholder="Search marketplace..." class="search-input">
+                <button type="button" class="search-btn" id="searchBtn">
+                    <img src="Images/grey-search-bar.svg" alt="Search" class="search-icon">
+                </button>
+            </div>
+
+            <!-- User Controls -->
+            <div class="user-section">
+                <button type="button" class="btn-primary create-post-btn" id="createPostBtn">+ Create Post</button>
+
+                <!-- Notification Icon with Badge -->
+                <div class="notification-icon" id="notificationIcon">
+                    <span class="notification-badge" id="notificationBadge">3</span>
+                    <img src="Images/notification-icon.svg" alt="Notifications" class="notification-img">
+                </div>
+
+                <!-- User Profile Dropdown -->
+                <div class="user-profile" id="userProfile">
+                    <img src="Images/profile-icon.png" alt="User" class="profile-img" id="userAvatar">
+                    <span class="username" id="displayUsername">@username</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <a href="dashboard.html" class="nav-tab">Dashboard</a>
+            <button class="nav-tab active" data-section="marketplace">Marketplace</button>
+            <a href="services.html" class="nav-tab">Services</a>
+        </nav>
+    </header>
+
+    <!-- User Profile Dropdown - Move this right after the header -->
+    <div id="userProfileDropdown" class="profile-dropdown" style="display: none;">
+        <div class="profile-header">
+            <img src="Images/profile-icon.png" alt="User" class="dropdown-avatar">
+            <div class="profile-details">
+                <div class="profile-name" id="profileName">User Name</div>
+                <div class="profile-email" id="profileEmail">user@tip.edu.ph</div>
+            </div>
+        </div>
+        <div class="profile-menu">
+            <a href="#" class="menu-item" data-action="edit-profile">
+                <img src="Images/profile-icon.svg" alt="Edit Profile" class="menu-icon-img">
+                Edit Profile
+            </a>
+            <a href="#" class="menu-item" data-action="settings">
+                <img src="Images/gear-icon.svg" alt="Settings" class="menu-icon-img">
+                Settings
+            </a>
+            <a href="#" class="menu-item" data-action="help">
+                <img src="Images/question-mark-icon.svg" alt="Help" class="menu-icon-img">
+                Help & Support
+            </a>
+            <hr>
+            <a href="#" class="menu-item" data-action="logout">
+                <img src="Images/exit-icon.svg" alt="Logout" class="menu-icon-img">
+                Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- Marketplace Section -->
+    <main class="marketplace-main" style="padding-top: 0; max-width: 1400px; margin: 0 auto;">
+        <div class="marketplace-container">
+            <!-- Marketplace Header -->
+            <div class="marketplace-header">
+                <div class="marketplace-banner">
+                    <img src="Images/LOGO-LONG.png" alt="ONE-TiP Marketplace" class="marketplace-logo">
+                    <h1>Marketplace</h1>
+                    <p>Find great deals from fellow TiP students!</p>
+                </div>
+            </div>
+
+            <!-- Shop by Category -->
+            <div class="category-section">
+                <h2>Shop by Category!</h2>
+                <div class="category-grid">
+                    <div class="category-item active" data-category="all">
+                        <div class="category-icon">
+                            <img src="Images/all-items-icon.svg" alt="All Items" class="category-icon-img">
+                        </div>
+                        <span>All Items</span>
+                    </div>
+                    <div class="category-item" data-category="electronics">
+                        <div class="category-icon">
+                            <img src="Images/electronics-icon.svg" alt="Electronics" class="category-icon-img">
+                        </div>
+                        <span>Electronics</span>
+                    </div>
+                    <div class="category-item" data-category="books">
+                        <div class="category-icon">
+                            <img src="Images/book-icon.svg" alt="Books" class="category-icon-img">
+                        </div>
+                        <span>Books & Supplies</span>
+                    </div>
+                    <div class="category-item" data-category="calculators">
+                        <div class="category-icon">
+                            <img src="Images/calculators-icon.svg" alt="Calculators" class="category-icon-img">
+                        </div>
+                        <span>Calculators</span>
+                    </div>
+                    <div class="category-item" data-category="art">
+                        <div class="category-icon">
+                            <img src="Images/art-icon.svg" alt="Art Supplies" class="category-icon-img">
+                        </div>
+                        <span>Art Supplies</span>
+                    </div>
+                    <div class="category-item" data-category="musical">
+                        <div class="category-icon">
+                            <img src="Images/music-icon.svg" alt="Musical Instruments" class="category-icon-img">
+                        </div>
+                        <span>Musical Instruments</span>
+                    </div>
+                    <div class="category-item" data-category="sports">
+                        <div class="category-icon">
+                            <img src="Images/sports-icon.svg" alt="Sports Equipment" class="category-icon-img">
+                        </div>
+                        <span>Sports Equipment</span>
+                    </div>
+                    <div class="category-item" data-category="food">
+                        <div class="category-icon">
+                            <img src="Images/food-icon.svg" alt="Food & Snacks" class="category-icon-img">
+                        </div>
+                        <span>Food & Snacks</span>
+                    </div>
+                    <div class="category-item" data-category="bags">
+                        <div class="category-icon">
+                            <img src="Images/bag-icon.svg" alt="Bags & Accessories" class="category-icon-img">
+                        </div>
+                        <span>Bags & Accessories</span>
+                    </div>
+                    <div class="category-item" data-category="misc">
+                        <div class="category-icon">
+                            <img src="Images/misc-icon.svg" alt="Miscellaneous" class="category-icon-img">
+                        </div>
+                        <span>Miscellaneous</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Filter Section -->
+            <div class="filter-section">
+                <div class="filter-row">
+                    <div class="filter-group">
+                        <label for="sortBy">Sort by:</label>
+                        <select id="sortBy" class="filter-select">
+                            <option value="newest">Newest First</option>
+                            <option value="oldest">Oldest First</option>
+                            <option value="price_low">Price: Low to High</option>
+                            <option value="price_high">Price: High to Low</option>
+                            <option value="popular">Most Popular</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="conditionFilter">Condition:</label>
+                        <select id="conditionFilter" class="filter-select">
+                            <option value="all">All Conditions</option>
+                            <option value="new">Brand New</option>
+                            <option value="like_new">Like New</option>
+                            <option value="excellent">Excellent</option>
+                            <option value="good">Good</option>
+                            <option value="fair">Fair</option>
+                        </select>
+                    </div>
+
+                    <div class="filter-group">
+                        <label for="priceRange">Price Range:</label>
+                        <select id="priceRange" class="filter-select">
+                            <option value="all">All Prices</option>
+                            <option value="0-100">₱0 - ₱100</option>
+                            <option value="100-500">₱100 - ₱500</option>
+                            <option value="500-1000">₱500 - ₱1,000</option>
+                            <option value="1000-5000">₱1,000 - ₱5,000</option>
+                            <option value="5000+">₱5,000+</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Grid -->
+            <div class="products-section">
+                <div class="products-grid" id="productsGrid">
+                    <!-- Products will be loaded here -->
+                </div>
+
+                <div class="load-more-section">
+                    <button class="btn-secondary" id="loadMoreProducts">Load More Products</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Report Modal -->
+    <div id="reportModal" class="modal report-modal" style="display: none;">
+        <div class="modal-content report-modal-content"
+            style="max-width: 500px; margin: 5% auto; background: white; border-radius: 15px; overflow: hidden;">
+            <div class="report-modal-header"
+                style="background: linear-gradient(135deg, #dc3545, #c82333); color: white; padding: 1.5rem; display: flex; align-items: center; gap: 1rem;">
+                <img src="Images/flag-icon.svg" alt="Report"
+                    style="width: 32px; height: 32px; filter: brightness(0) invert(1);">
+                <h3 style="margin: 0; font-size: 1.5rem;">Report Item</h3>
+            </div>
+
+            <div class="report-modal-body" style="padding: 2rem;">
+                <div
+                    style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; color: #856404; font-size: 0.9rem;">
+                    <strong style="display: block; margin-bottom: 0.5rem;">⚠️ Important:</strong>
+                    False reports may result in account restrictions. Please only report content that violates our
+                    community guidelines.
+                </div>
+
+                <form id="reportForm" class="report-form">
+                    <div class="input-group" style="margin-bottom: 1.5rem;">
+                        <label
+                            style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333;">Reporting:
+                            <strong id="reportItemTitle">Item</strong></label>
+                    </div>
+
+                    <div class="input-group" style="margin-bottom: 1.5rem;">
+                        <label for="reportReason"
+                            style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333;">Reason for
+                            Report *</label>
+                        <select id="reportReason" name="reason" required
+                            style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 8px; font-family: inherit; font-size: 1rem;">
+                            <option value="">Select a reason...</option>
+                            <option value="inappropriate">Inappropriate Content</option>
+                            <option value="spam">Spam or Misleading</option>
+                            <option value="fraud">Fraud or Scam</option>
+                            <option value="duplicate">Duplicate Posting</option>
+                            <option value="prohibited">Prohibited Item</option>
+                            <option value="harassment">Harassment or Bullying</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group" style="margin-bottom: 1.5rem;">
+                        <label for="reportDetails"
+                            style="display: block; font-weight: 600; margin-bottom: 0.5rem; color: #333;">Additional
+                            Details (Optional)</label>
+                        <textarea id="reportDetails" name="details"
+                            placeholder="Provide any additional information that might help us review this report..."
+                            maxlength="500"
+                            style="width: 100%; padding: 0.75rem; border: 2px solid #e9ecef; border-radius: 8px; font-family: inherit; font-size: 1rem; resize: vertical; min-height: 100px;"></textarea>
+                        <small
+                            style="display: block; margin-top: 0.5rem; color: #666; font-size: 0.85rem;">0/500 characters
+                        </small>
+                    </div>
+                </form>
+            </div>
+
+            <div class="report-modal-footer"
+                style="padding: 1.5rem 2rem; background: #f8f9fa; display: flex; gap: 1rem; justify-content: flex-end;">
+                <button type="button" class="btn-secondary" id="cancelReportBtn">Cancel</button>
+                <button type="submit" form="reportForm" class="btn-primary" id="submitReportBtn"
+                    style="background: #dc3545;">Submit Report</button>
+            </div>
+
+            <button class="close" id="closeReportModal"
+                style="position: absolute; top: 15px; right: 15px; color: white; font-size: 1.8rem; background: rgba(255,255,255,0.2); border: none; width: 40px; height: 40px; border-radius: 50%; cursor: pointer;">&times;
+            </button>
+        </div>
+    </div>
+
+    <!-- Product Details Modal -->
+    <div id="productModal" class="modal product-modal" style="display: none;">
+        <div class="modal-content product-modal-content">
+            <button class="product-modal-close" id="closeProductModal">&times;</button>
+
+            <div class="product-modal-body">
+                <div class="product-image-section">
+                    <div class="product-main-image" id="productMainImage">
+                        <div style="font-size: 4rem; color: #999;">📦</div>
+                    </div>
+                </div>
+
+                <div class="product-details-section">
+                    <div class="product-header">
+                        <h2 id="productTitle">Product Name</h2>
+                        <p class="product-listing-date" id="productDate">Listed recently</p>
+                    </div>
+
+                    <div class="product-price-section">
+                        <div class="price-badge">
+                            <span class="product-price" id="productPrice">₱0</span>
+                            <span class="price-type" id="priceType">Negotiable - Cash on meetup</span>
+                        </div>
+                    </div>
+
+                    <div class="product-description">
+                        <h4>Description</h4>
+                        <p id="productDescription">Product description will be displayed here...</p>
+                    </div>
+
+                    <div class="seller-info-section">
+                        <h4>Seller Information</h4>
+                        <div class="seller-card">
+                            <div class="seller-avatar">
+                                <img id="sellerAvatar" src="Images/profile-icon.png" alt="Seller"
+                                    class="seller-profile-img">
+                            </div>
+                            <div class="seller-details">
+                                <div class="seller-name" id="sellerName">Seller Name</div>
+                                <div class="seller-department" id="sellerDepartment">Department</div>
+                                <div class="seller-rating">
+                                    <span class="rating-stars">★★★★★</span>
+                                    <span class="rating-count" id="ratingCount">(0 vouches)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="contact-availability">
+                            <div class="availability-item">
+                                <strong>Chat availability:</strong>
+                                <span id="chatAvailability">Not specified</span>
+                            </div>
+                            <div class="availability-item">
+                                <strong>Meetup:</strong>
+                                <span id="meetupAvailability">Not specified</span>
+                            </div>
+                        </div>
+
+                        <div class="contact-buttons">
+                            <button class="btn-contact btn-facebook" id="contactFacebook">
+                                <img src="Images/facebook-icon.svg" alt="Facebook" class="contact-icon">
+                                Facebook
+                            </button>
+                            <button class="btn-contact btn-email" id="contactEmail">
+                                <img src="Images/email-icon.svg" alt="Email" class="contact-icon">
+                                Email
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Post Modal -->
+    <div id="createPostModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Post</h2>
+                <span class="close" id="closeModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Share your items or services with the ONE-TiP community</p>
+
+                <!-- Post Type Selection -->
+                <div class="post-type-selection">
+                    <button class="post-type-btn active" data-type="marketplace" id="marketplaceBtn">Marketplace Item
+                    </button>
+                    <button class="post-type-btn" data-type="service" id="serviceBtn">Service Offer</button>
+                </div>
+
+                <!-- Dynamic Form Container -->
+                <div id="createPostForm">
+                    <!-- Forms will be loaded here via JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Panel -->
+    <div id="notificationPanel" class="notification-panel">
+        <div class="notification-header">
+            <h3>Notifications</h3>
+            <span class="notification-count" id="notificationCount">3 unread notifications</span>
+            <div class="notification-actions">
+                <button class="notification-btn active" data-filter="all">All</button>
+                <button class="notification-btn" data-filter="unread">Unread (3)</button>
+                <button class="notification-btn" id="markAllRead">Mark all read</button>
+            </div>
+        </div>
+        <div class="notification-list" id="notificationList">
+            <!-- Notifications will be loaded here via JavaScript -->
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/ai-recommendations.js"></script>
+    <script src="assets/js/chat.js"></script>
+    <script src="assets/js/marketplace.js"></script>
+    <script src="assets/js/create-post.js"></script>
+    <script src="assets/js/notifications.js"></script>
+    
+    <!-- Demo Helper Script -->
+    <script>
+        // Press "D" to enable debug mode
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'd' || e.key === 'D') {
+                if (window.aiRecommendations) {
+                    window.aiRecommendations.enableDebug();
+                    alert('🤖 AI Debug Mode Enabled!\n\nWatch the bottom-right corner for tracking.\n\nClick products to see recommendations in the search bar!');
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

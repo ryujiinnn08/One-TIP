@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONE-TiP - Help & Support</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <link rel="stylesheet" href="assets/css/help-support.css">
+</head>
+<body>
+    <!-- Navigation Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo-section">
+                <a href="dashboard.html" style="display: flex; align-items: center; text-decoration: none;">
+                    <img src="Images/LOGO-LONG.png" alt="ONE-TiP" class="header-logo">
+                </a>
+            </div>
+
+            <div class="search-section">
+                <input type="text" id="helpGlobalSearch" placeholder="Search help articles..." class="search-input">
+                <button type="button" class="search-btn" id="helpSearchBtn">
+                    <img src="Images/grey-search-bar.svg" alt="Search" class="search-icon">
+                </button>
+            </div>
+
+            <div class="user-section">
+                <a href="dashboard.html" class="btn-secondary">Back to Dashboard</a>
+                
+                <div class="user-profile" id="helpUserProfile">
+                    <img src="Images/profile-icon.png" alt="User" class="profile-img" id="helpUserAvatar">
+                    <span class="username" id="helpDisplayUsername">@username</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Help & Support Main Content -->
+    <main class="help-main">
+        <div class="help-container">
+            <!-- Help Header -->
+            <div class="help-header">
+                <h1>Help & Support</h1>
+                <p>Get instant help with our AI assistant or browse our knowledge base</p>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="quick-action-btn" id="helpContactAdminBtn">
+                    <div class="action-icon">
+                        <img src="Images/email-icon.svg" alt="Contact Admin">
+                    </div>
+                    <div class="action-content">
+                        <h3>Contact Admin</h3>
+                        <p>Reach out to our support team</p>
+                    </div>
+                </button>
+                
+                <button class="quick-action-btn" id="helpBrowseKnowledgeBtn">
+                    <div class="action-icon">
+                        <img src="Images/books-icon.svg" alt="Knowledge Base">
+                    </div>
+                    <div class="action-content">
+                        <h3>Knowledge Base</h3>
+                        <p>Browse frequently asked questions</p>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Knowledge Base Section -->
+            <div class="knowledge-base" id="helpKnowledgeBase">
+                <h2>Frequently Asked Questions</h2>
+                
+                <div class="faq-search">
+                    <input type="text" id="helpFaqSearch" placeholder="Search FAQs..." class="search-input">
+                    <div class="faq-search-icon">
+                        <img src="Images/grey-search-bar.svg" alt="Search" style="width: 20px; height: 20px; opacity: 0.6;">
+                    </div>
+                </div>
+                
+                <div class="faq-stats">
+                    <div class="faq-stat">
+                        <span class="faq-stat-number" id="helpTotalFaqs">12</span>
+                        <span class="faq-stat-label">Total FAQs</span>
+                    </div>
+                    <div class="faq-stat">
+                        <span class="faq-stat-number" id="helpHelpfulVotes">156</span>
+                        <span class="faq-stat-label">Helpful Votes</span>
+                    </div>
+                </div>
+                
+                <div class="faq-categories">
+                    <button class="category-tab active" data-help-category="all">All</button>
+                    <button class="category-tab" data-help-category="account">Account</button>
+                    <button class="category-tab" data-help-category="posting">Posting</button>
+                    <button class="category-tab" data-help-category="marketplace">Marketplace</button>
+                    <button class="category-tab" data-help-category="services">Services</button>
+                    <button class="category-tab" data-help-category="technical">Technical</button>
+                </div>
+
+                <div class="faq-list" id="helpFaqList">
+                    <!-- FAQ items will be loaded here -->
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            How do I create an account on ONE-TiP?
+                            <span class="faq-arrow">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>To create an account, click "Sign Up" on the login page. You'll need your TiP email address (@tip.edu.ph), student number, and choose a secure password. After registration, verify your email and choose a unique username. Only TiP students can register to ensure a safe community.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            How do I create a marketplace listing?
+                            <span class="faq-arrow">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Click the "+ Create Post" button, select "Marketplace Item", fill in your item details (title, price, condition, description), upload clear photos, set your price and condition, add contact information, and submit for review. Posts are typically approved within 24 hours.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            How do I offer services on ONE-TiP?
+                            <span class="faq-arrow">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Click "+ Create Post", select "Service Offer", add your service title and starting price, set delivery timeframes, showcase your portfolio with examples, write a detailed description, and submit for approval. Popular services include tutoring, graphic design, programming help, and academic assistance.</p>
+                        </div>
+                    </div>
+
+                    <div class="faq-item">
+                        <button class="faq-question">
+                            Is it safe to buy from other students?
+                            <span class="faq-arrow">▼</span>
+                        </button>
+                        <div class="faq-answer">
+                            <p>Yes! All users are verified TiP students. For safety: meet in public campus areas (library, cafeteria, student lounge), bring a friend when meeting for high-value transactions, use cash for small amounts, trust your instincts, and report any suspicious activity.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Contact Admin Modal -->
+    <div id="helpContactAdminModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Contact Admin Support</h2>
+                <span class="close" id="helpCloseContactModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p>Can't find what you're looking for? Our support team is here to help!</p>
+                
+                <form id="helpContactAdminForm" class="contact-form">
+                    <div class="input-group">
+                        <label for="helpSupportCategory">Category</label>
+                        <select id="helpSupportCategory" name="category" required>
+                            <option value="">Select a category</option>
+                            <option value="account">Account Issues</option>
+                            <option value="posting">Posting Problems</option>
+                            <option value="technical">Technical Issues</option>
+                            <option value="payment">Payment & Transactions</option>
+                            <option value="safety">Safety & Security</option>
+                            <option value="feedback">Feedback & Suggestions</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="helpSupportPriority">Priority</label>
+                        <select id="helpSupportPriority" name="priority" required>
+                            <option value="low">Low - General inquiry</option>
+                            <option value="medium">Medium - Issue affecting usage</option>
+                            <option value="high">High - Urgent issue</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label for="helpSupportSubject">Subject</label>
+                        <input type="text" id="helpSupportSubject" name="subject" placeholder="Brief description of your issue" required maxlength="100">
+                    </div>
+
+                    <div class="input-group">
+                        <label for="helpSupportMessage">Message</label>
+                        <textarea id="helpSupportMessage" name="message" placeholder="Please provide as much detail as possible about your issue..." required rows="6" maxlength="1000"></textarea>
+                        <small class="char-count"><span id="helpMessageCharCount">0</span>/1000 characters</small>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="button" class="btn-secondary" id="helpCancelContactBtn">Cancel</button>
+                        <button type="submit" class="btn-primary" id="helpSendContactBtn">Send Message</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- User Profile Dropdown -->
+    <div id="helpUserProfileDropdown" class="profile-dropdown" style="display: none;">
+        <div class="profile-header">
+            <img src="Images/profile-icon.png" alt="User" class="dropdown-avatar">
+            <div class="profile-details">
+                <div class="profile-name" id="helpProfileName">User Name</div>
+                <div class="profile-email" id="helpProfileEmail">user@tip.edu.ph</div>
+            </div>
+        </div>
+        <div class="profile-menu">
+            <a href="edit-profile.html" class="menu-item">
+                <img src="Images/profile-icon.svg" alt="Edit Profile" class="menu-icon-img">
+                Edit Profile
+            </a>
+            <a href="dashboard.html" class="menu-item">
+                <img src="Images/gear-icon.svg" alt="Dashboard" class="menu-icon-img">
+                Dashboard
+            </a>
+            <hr>
+            <a href="#" class="menu-item" data-help-action="logout">
+                <img src="Images/exit-icon.svg" alt="Logout" class="menu-icon-img">
+                Logout
+            </a>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="assets/js/help-support.js"></script>
+</body>
+</html>

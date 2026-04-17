@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ONE-TiP - AI Recommendations Demo</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/dashboard.css">
+    <style>
+        .demo-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .demo-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .demo-header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-instructions {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            margin-bottom: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .demo-instructions h2 {
+            color: #667eea;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        
+        .demo-step {
+            background: linear-gradient(135deg, #f5f7fa, #e9ecef);
+            padding: 1.5rem;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .demo-step-number {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+        }
+        
+        .demo-step h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+        
+        .demo-step p {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .demo-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-block;
+            margin-top: 1rem;
+        }
+        
+        .demo-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+        
+        .stats-display {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.9);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 15px;
+            min-width: 250px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            z-index: 9999;
+        }
+        
+        .stats-display h4 {
+            color: #ffc107;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+        
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .stat-label {
+            color: #aaa;
+        }
+        
+        .stat-value {
+            color: white;
+            font-weight: bold;
+        }
+        
+        .status-indicator {
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .status-waiting {
+            background: #ff5252;
+            color: white;
+        }
+        
+        .status-ready {
+            background: #4caf50;
+            color: white;
+            animation: pulse-glow 2s infinite;
+        }
+        
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <div class="demo-header">
+            <h1>✨ AI Recommendations Demo</h1>
+            <p>Experience intelligent product suggestions based on your browsing behavior</p>
+        </div>
+        
+        <div class="demo-instructions">
+            <h2>How It Works</h2>
+            <p>Our AI-powered recommendation system learns from your browsing patterns and suggests relevant products. Here's how to see it in action:</p>
+            
+            <div class="demo-steps">
+                <div class="demo-step">
+                    <div class="demo-step-number">1</div>
+                    <h3>Browse Products</h3>
+                    <p>Click on 2-3 products below to view their details. The AI tracks your category preferences.</p>
+                </div>
+                
+                <div class="demo-step">
+                    <div class="demo-step-number">2</div>
+                    <h3>Watch the Magic</h3>
+                    <p>After viewing a few items, a purple "Recommended for You" section will appear with personalized suggestions.</p>
+                </div>
+                
+                <div class="demo-step">
+                    <div class="demo-step-number">3</div>
+                    <h3>See Real-Time Stats</h3>
+                    <p>Watch the bottom-right corner to see live tracking of your interactions and when recommendations activate.</p>
+                </div>
+            </div>
+            
+            <div style="text-align: center;">
+                <a href="marketplace.html" class="demo-button">🚀 Start Demo on Marketplace</a>
+                <button onclick="window.aiRecommendations && window.aiRecommendations.enableDebug(); alert('Debug mode enabled! Open marketplace.html');" class="demo-button" style="background: #ffc107; color: #333; margin-left: 1rem;">
+                    🔧 Enable Debug Mode
+                </button>
+            </div>
+        </div>
+        
+        <div class="demo-instructions">
+            <h2>Key Features</h2>
+            <ul style="line-height: 2; color: #555; font-size: 1.05rem;">
+                <li>✅ <strong>Smart Tracking:</strong> Monitors product views and search queries</li>
+                <li>✅ <strong>Category Matching:</strong> Suggests items from categories you're interested in</li>
+                <li>✅ <strong>Real-time Updates:</strong> Recommendations appear dynamically as you browse</li>
+                <li>✅ <strong>Beautiful Design:</strong> Eye-catching purple gradient section with animations</li>
+                <li>✅ <strong>Session-Based:</strong> Data clears when you close the browser (privacy-friendly)</li>
+                <li>✅ <strong>Realistic Feel:</strong> 500ms delay simulates AI processing</li>
+                <li>✅ <strong>Variety:</strong> Shuffles recommendations for freshness</li>
+            </ul>
+        </div>
+        
+        <div class="demo-instructions">
+            <h2>Technical Details</h2>
+            <div class="demo-steps">
+                <div class="demo-step">
+                    <h3>📊 Tracking System</h3>
+                    <p>Uses sessionStorage to track user behavior without backend. Stores product views, searches, and category preferences.</p>
+                </div>
+                
+                <div class="demo-step">
+                    <h3>🎯 Smart Algorithm</h3>
+                    <p>Generates recommendations based on last viewed category, filters out already-seen items, and shuffles for variety.</p>
+                </div>
+                
+                <div class="demo-step">
+                    <h3>🎨 Visual Design</h3>
+                    <p>Purple gradient background with sparkle animations, "AI Pick" badges, and smooth transitions create an engaging experience.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Live Stats Display -->
+    <div class="stats-display" id="liveStats" style="display: none;">
+        <h4>🤖 AI Tracking Stats</h4>
+        <div class="stat-row">
+            <span class="stat-label">Product Views:</span>
+            <span class="stat-value" id="statViews">0</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Searches:</span>
+            <span class="stat-value" id="statSearches">0</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Total Interactions:</span>
+            <span class="stat-value" id="statTotal">0</span>
+        </div>
+        <div class="stat-row">
+            <span class="stat-label">Last Category:</span>
+            <span class="stat-value" id="statCategory">None</span>
+        </div>
+        <div class="status-indicator" id="statusIndicator">
+            <span class="status-waiting">⏳ Waiting for 2 interactions...</span>
+        </div>
+    </div>
+    
+    <script src="assets/js/ai-recommendations.js"></script>
+    <script>
+        // Auto-enable debug and show stats
+        if (window.aiRecommendations) {
+            window.aiRecommendations.enableDebug();
+            document.getElementById('liveStats').style.display = 'block';
+            
+            // Update stats every 500ms
+            setInterval(function() {
+                if (window.aiRecommendations) {
+                    const stats = window.aiRecommendations.getStats();
+                    document.getElementById('statViews').textContent = stats.viewedItems;
+                    document.getElementById('statSearches').textContent = stats.searches;
+                    document.getElementById('statTotal').textContent = stats.totalInteractions;
+                    document.getElementById('statCategory').textContent = stats.lastCategory || 'None';
+                    
+                    const statusDiv = document.getElementById('statusIndicator');
+                    if (stats.shouldShow) {
+                        statusDiv.innerHTML = '<span class="status-ready">✅ Recommendations Active!</span>';
+                    } else {
+                        const remaining = 2 - stats.totalInteractions;
+                        statusDiv.innerHTML = `<span class="status-waiting">⏳ ${remaining} more interaction${remaining !== 1 ? 's' : ''} needed</span>`;
+                    }
+                }
+            }, 500);
+        }
+    </script>
+</body>
+</html>

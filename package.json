@@ -1,0 +1,18 @@
+{
+  "name": "one-tip-marketplace",
+  "version": "1.0.0",
+  "description": "ONE-TiP Student Marketplace and Services Platform",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'Static site ready for deployment'",
+    "start": "echo 'Production ready'",
+    "dev": "npx http-server . -p 3000 -o"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ryujiinnn08/OneTIP.git"
+  },
+  "author": "Francis Aaron Ruzgal <mfaruzgal@tip.edu.ph>",
+  "license": "MIT",
+  "homepage": "https://ryujiinnn08.github.io/OneTIP"
+}

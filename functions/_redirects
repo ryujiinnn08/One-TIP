@@ -1,0 +1,5 @@
+/admin              /admin-login.html           301
+/search             /search-results.html        301
+/help               /help-support.html          301
+/api/*              /index.html                 200
+/*                  /index.html                 200
