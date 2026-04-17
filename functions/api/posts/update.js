@@ -45,6 +45,25 @@ export async function onRequestPost({ request, env }) {
         ).run();
         
         if (success) {
+            // Update images if provided
+            if (body.images && body.images.length > 0) {
+                try {
+                    // First, delete existing images
+                    await db.prepare("DELETE FROM post_images WHERE post_id = ?").bind(post_id).run();
+                    
+                    // Insert new images
+                    const stmts = body.images.map((img, index) => {
+                        return db.prepare(`
+                            INSERT INTO post_images (post_id, image_url, is_main)
+                            VALUES (?, ?, ?)
+                        `).bind(post_id, img, index === 0 ? 1 : 0);
+                    });
+                    await db.batch(stmts);
+                } catch (imgError) {
+                    console.error("Failed to update images:", imgError);
+                }
+            }
+
             return new Response(JSON.stringify({ 
                 success: true, 
                 message: 'Post updated successfully'

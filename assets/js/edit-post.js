@@ -94,6 +94,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     <textarea id="editDescription" name="description" required rows="4" maxlength="1000"></textarea>
                 </div>
                 
+                <div class="input-group">
+                    <label for="editImages">Upload New Images (Opional - Replaces Old)</label>
+                    <div class="upload-area" id="editUploadArea">
+                        <div class="upload-icon">
+                            <img src="Images/folder-icon.svg" alt="Upload" style="width: 48px; height: 48px; filter: brightness(0) saturate(100%) invert(50%);">
+                        </div>
+                        <p>Click to upload or drag and drop</p>
+                        <small>PNG, JPG, GIF up to 10MB (Max 5 images)</small>
+                        <input type="file" id="editImages" name="images[]" multiple accept="image/*" style="display: none;">
+                    </div>
+                    <div class="image-preview" id="editImagePreview"></div>
+                </div>
+                
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" id="cancelEditMarketplaceBtn">Cancel</button>
                     <button type="submit" class="btn-primary" id="updateMarketplaceBtn">Update Post</button>
@@ -105,6 +118,10 @@ document.addEventListener('DOMContentLoaded', function() {
         form.addEventListener('submit', handleUpdateSubmit);
         const cancelBtn = document.getElementById('cancelEditMarketplaceBtn');
         if (cancelBtn) cancelBtn.addEventListener('click', closeEditPostModal);
+        
+        const uploadArea = document.getElementById('editUploadArea');
+        const fileInput = document.getElementById('editImages');
+        if (uploadArea && fileInput) setupFileUpload(uploadArea, fileInput, 'editImagePreview');
 
         loadExistingPostData(id);
     }
@@ -163,6 +180,19 @@ document.addEventListener('DOMContentLoaded', function() {
                     <textarea id="editServiceDescription" name="service_description" required rows="5" maxlength="1000"></textarea>
                 </div>
                 
+                <div class="input-group">
+                    <label for="editServiceImages">Upload New Images (Optional - Replaces Old)</label>
+                    <div class="upload-area" id="editServiceUploadArea">
+                        <div class="upload-icon">
+                            <img src="Images/folder-icon.svg" alt="Upload" style="width: 48px; height: 48px; filter: brightness(0) saturate(100%) invert(50%);">
+                        </div>
+                        <p>Click to upload or drag and drop</p>
+                        <small>PNG, JPG, GIF up to 10MB (Max 5 images)</small>
+                        <input type="file" id="editServiceImages" name="service_images[]" multiple accept="image/*" style="display: none;">
+                    </div>
+                    <div class="image-preview" id="editServiceImagePreview"></div>
+                </div>
+                
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" id="cancelEditServiceBtn">Cancel</button>
                     <button type="submit" class="btn-primary" id="updateServiceBtn">Update Post</button>
@@ -174,6 +204,10 @@ document.addEventListener('DOMContentLoaded', function() {
         form.addEventListener('submit', handleUpdateSubmit);
         const cancelBtn = document.getElementById('cancelEditServiceBtn');
         if (cancelBtn) cancelBtn.addEventListener('click', closeEditPostModal);
+
+        const uploadArea = document.getElementById('editServiceUploadArea');
+        const fileInput = document.getElementById('editServiceImages');
+        if (uploadArea && fileInput) setupFileUpload(uploadArea, fileInput, 'editServiceImagePreview');
 
         loadExistingPostData(id);
     }
@@ -280,6 +314,80 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    function setupFileUpload(uploadArea, fileInput, previewContainerId) {
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('drag-over');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('drag-over');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('drag-over');
+            handleFileSelection(e.dataTransfer.files, previewContainerId);
+        });
+        
+        fileInput.addEventListener('change', (e) => {
+            handleFileSelection(e.target.files, previewContainerId);
+        });
+    }
+
+    function handleFileSelection(files, previewContainerId) {
+        const previewContainer = document.getElementById(previewContainerId);
+        if (!previewContainer) return;
+
+        const maxFiles = 5;
+        
+        if (files.length > maxFiles) {
+            alert(`You can only upload up to ${maxFiles} images`);
+            return;
+        }
+        
+        previewContainer.innerHTML = '';
+        
+        Array.from(files).forEach((file, index) => {
+            if (!file.type.startsWith('image/')) {
+                alert(`File ${file.name} is not an image`);
+                return;
+            }
+            
+            if (file.size > 10 * 1024 * 1024) {
+                alert(`File ${file.name} is larger than 10MB`);
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const imageDiv = document.createElement('div');
+                imageDiv.className = 'image-preview-item';
+                imageDiv.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview ${index + 1}">
+                    <button type="button" class="remove-image" data-index="${index}">×</button>
+                `;
+                previewContainer.appendChild(imageDiv);
+            };
+            reader.readAsDataURL(file);
+        });
+        
+        previewContainer.addEventListener('click', (e) => {
+            if (e.target.classList.contains('remove-image')) {
+                e.target.parentElement.remove();
+            }
+        });
+    }
+
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+
     async function handleUpdateSubmit(e) {
         e.preventDefault();
         
@@ -318,13 +426,26 @@ document.addEventListener('DOMContentLoaded', function() {
             price: price,
             condition_status: condition_status
         };
+        
+        let imageInput = null;
+        if (currentEditType === 'marketplace') {
+            imageInput = document.getElementById('editImages');
+        } else if (currentEditType === 'service') {
+            imageInput = document.getElementById('editServiceImages');
+        }
+        
+        if (imageInput && imageInput.files.length > 0) {
+            const base64Images = [];
+            for (let i = 0; i < Math.min(imageInput.files.length, 5); i++) {
+                base64Images.push(await toBase64(imageInput.files[i]));
+            }
+            formData.images = base64Images;
+        }
 
         const submitBtn = document.querySelector('#editPostModal .btn-primary');
         if (submitBtn) submitBtn.textContent = 'Updating...';
         
         try {
-            // Edit post handles NO new images right now as a simplification 
-            // since the main concern was UI stacking.
             const response = await fetch('/api/posts/update', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
