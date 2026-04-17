@@ -47,9 +47,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const isEditing = editId !== null;
         
         // Update Modal styling for editing vs creating
-        const modalHeader = document.querySelector('.modal-header h2');
-        const modalDesc = document.querySelector('.modal-header p');
-        const typeSelection = document.querySelector('.post-type-selection');
+        const modalHeader = document.querySelector('#createPostModal .modal-header h2');
+        const modalDesc = document.querySelector('#createPostModal .modal-body p');
+        const typeSelection = document.querySelector('#createPostModal .post-type-selection');
+        const submitBtn = document.querySelector('.btn-primary');
         
         if (modalHeader) {
             modalHeader.textContent = isEditing ? 'Edit Post' : 'Create New Post';
@@ -771,9 +772,9 @@ document.addEventListener('DOMContentLoaded', function() {
         editingPostId = null;
         if (formContainer) formContainer.innerHTML = '';
         
-        const modalHeader = document.querySelector('.modal-header h2');
-        const modalDesc = document.querySelector('.modal-header p');
-        const typeSelection = document.querySelector('.post-type-selection');
+        const modalHeader = document.querySelector('#createPostModal .modal-header h2');
+        const modalDesc = document.querySelector('#createPostModal .modal-body p');
+        const typeSelection = document.querySelector('#createPostModal .post-type-selection');
         
         if (modalHeader) modalHeader.textContent = 'Create New Post';
         if (modalDesc) modalDesc.style.display = 'block';
