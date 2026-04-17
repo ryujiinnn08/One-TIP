@@ -187,212 +187,26 @@ document.addEventListener('DOMContentLoaded', function () {
         alert('Load more functionality - would load additional products in a real implementation');
     }
 
-    function loadProducts() {
-        console.log('Loading marketplace products...');
+    async function loadProducts() {
+        console.log('Fetching live marketplace products from D1 Database...');
         
-        // Sample products data
-        currentProducts = [
-            {
-                id: 1,
-                title: 'MacBook Pro 13" 2022',
-                price: 35000,
-                condition: 'like_new',
-                seller_name: 'John Doe',
-                seller_department: 'CCS',
-                campus: 'Arlegui',
-                seller_vouches: 15,
-                vouch_count: 8,
-                vouched_by_user: false,
-                created_at: new Date(Date.now() - 9 * 24 * 60 * 60 * 1000),
-                description: 'Lorem ipsum dolor sit amet consectetur. Enim donec mauris risus purus volutpat hac nec. Felis eleifend consectetur mattis tellus iaculis ornare sem elit. Proin ullamcorper facilisis tellus venenatis nisl. Elementum sed nisl donec venenatis ac mi sed. Non egestas morbi auctor elementum. Fames sit ut purus elementum in.',
-                category: 'electronics',
-                images: [],
-                contact_info: {
-                    chat_availability: '8:00 am - 9:00pm',
-                    meetup_availability: 'Weekdays - Casal / Arlegui Campus',
-                    facebook: 'john.doe.tip',
-                    email: 'john.doe@tip.edu.ph'
-                }
-            },
-            {
-                id: 2,
-                title: 'Calculus Textbook',
-                price: 800,
-                condition: 'good',
-                seller_name: 'Maria Santos',
-                seller_department: 'Engineering',
-                campus: 'Casal',
-                seller_vouches: 8,
-                vouch_count: 5,
-                vouched_by_user: false,
-                created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-                description: 'Well-maintained calculus textbook. Some highlighting but all pages intact.',
-                category: 'books',
-                images: [],
-                contact_info: {
-                    chat_availability: '9:00 am - 8:00 pm',
-                    meetup_availability: 'Weekends - Casal / Arlegui Campus',
-                    facebook: 'maria.santos.tip',
-                    email: 'maria.santos@tip.edu.ph'
-                }
-            },
-            {
-                id: 3,
-                title: 'Scientific Calculator',
-                price: 450,
-                condition: 'excellent',
-                seller_name: 'Alex Chen',
-                seller_department: 'CCS',
-                campus: 'Arlegui',
-                seller_vouches: 23,
-                vouch_count: 10,
-                vouched_by_user: false,
-                created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-                description: 'Excellent condition scientific calculator. Perfect for engineering students.',
-                category: 'calculators',
-                images: [],
-                contact_info: {
-                    chat_availability: '8:00 am - 10:00 pm',
-                    meetup_availability: 'Anytime - Casal / Arlegui Campus',
-                    facebook: 'alex.chen.tip',
-                    email: 'alex.chen@tip.edu.ph'
-                }
-            },
-            {
-                id: 4,
-                title: 'Art Supply Set',
-                price: 1200,
-                condition: 'new',
-                seller_name: 'Lisa Park',
-                seller_department: 'Arts',
-                campus: 'Casal',
-                seller_vouches: 12,
-                vouch_count: 6,
-                vouched_by_user: false,
-                created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-                description: 'Brand new art supply set with pencils, brushes, paints, and canvas.',
-                category: 'art',
-                images: [],
-                contact_info: {
-                    chat_availability: '10:00 am - 6:00 pm',
-                    meetup_availability: 'Weekdays - Casal / Arlegui Campus',
-                    facebook: 'lisa.park.tip',
-                    email: 'lisa.park@tip.edu.ph'
-                }
-            },
-            {
-                id: 5,
-                title: 'Acoustic Guitar',
-                price: 3500,
-                condition: 'good',
-                seller_name: 'Mike Rodriguez',
-                seller_department: 'Business',
-                campus: 'Arlegui',
-                seller_vouches: 6,
-                vouch_count: 3,
-                vouched_by_user: false,
-                created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-                description: 'Good condition acoustic guitar. Great for beginners and intermediate players.',
-                category: 'musical',
-                images: [],
-                contact_info: {
-                    chat_availability: '7:00 am - 11:00 pm',
-                    meetup_availability: 'Flexible schedule - Casal / Arlegui Campus',
-                    facebook: 'mike.rodriguez.tip',
-                    email: 'mike.rodriguez@tip.edu.ph'
-                }
-            },
-            {
-                id: 6,
-                title: 'Basketball',
-                price: 150,
-                condition: 'excellent',
-                seller_name: 'David Kim',
-                seller_department: 'Engineering',
-                campus: 'Casal',
-                seller_vouches: 19,
-                vouch_count: 9,
-                vouched_by_user: false,
-                created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-                description: 'Official size basketball in excellent condition. Perfect for games.',
-                category: 'sports',
-                images: [],
-                contact_info: {
-                    chat_availability: '6:00 am - 9:00 pm',
-                    meetup_availability: 'Daily - Casal Campus (Sports Complex)',
-                    facebook: 'david.kim.tip',
-                    email: 'david.kim@tip.edu.ph'
-                }
-            },
-            {
-                id: 7,
-                title: 'Programming Book',
-                price: 600,
-                condition: 'good',
-                seller_name: 'Sarah Wilson',
-                seller_department: 'CCS',
-                campus: 'Arlegui',
-                seller_vouches: 11,
-                vouch_count: 4,
-                vouched_by_user: false,
-                created_at: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
-                description: 'Clean Code textbook in good condition.',
-                category: 'books',
-                images: [],
-                contact_info: {
-                    chat_availability: '9:00 am - 7:00 pm',
-                    meetup_availability: 'Weekdays - Casal Campus',
-                    facebook: 'sarah.wilson.tip',
-                    email: 'sarah.wilson@tip.edu.ph'
-                }
-            },
-            {
-                id: 8,
-                title: 'Laptop Stand',
-                price: 800,
-                condition: 'like_new',
-                seller_name: 'Tom Brown',
-                seller_department: 'Engineering',
-                campus: 'Arlegui',
-                seller_vouches: 7,
-                vouch_count: 2,
-                vouched_by_user: false,
-                created_at: new Date(Date.now() - 6 * 24 * 60 * 60 * 1000),
-                description: 'Adjustable laptop stand, barely used.',
-                category: 'electronics',
-                images: [],
-                contact_info: {
-                    chat_availability: '8:00 am - 8:00 pm',
-                    meetup_availability: 'Weekdays - Arlegui Campus',
-                    facebook: 'tom.brown.tip',
-                    email: 'tom.brown@tip.edu.ph'
-                }
-            },
-            {
-                id: 9,
-                title: 'Food Container Set',
-                price: 250,
-                condition: 'new',
-                seller_name: 'Emma Davis',
-                seller_department: 'Business',
-                campus: 'Casal',
-                seller_vouches: 5,
-                vouch_count: 1,
-                vouched_by_user: false,
-                created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-                description: 'Brand new food container set, perfect for students.',
-                category: 'food',
-                images: [],
-                contact_info: {
-                    chat_availability: '10:00 am - 6:00 pm',
-                    meetup_availability: 'Weekdays - Casal Campus',
-                    facebook: 'emma.davis.tip',
-                    email: 'emma.davis@tip.edu.ph'
-                }
+        try {
+            const response = await fetch('/api/posts/marketplace');
+            const data = await response.json();
+            
+            if (response.ok && data.success) {
+                currentProducts = data.posts;
+                filterAndDisplayProducts();
+            } else {
+                console.error("Failed to fetch marketplace data:", data.error);
+                currentProducts = [];
+                filterAndDisplayProducts();
             }
-        ];
-
-        filterAndDisplayProducts();
+        } catch (error) {
+            console.error("Network error fetching marketplace:", error);
+            currentProducts = [];
+            filterAndDisplayProducts();
+        }
     }
 
     function filterAndDisplayProducts() {
@@ -483,7 +297,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <div class="product-image">
                     ${product.images && product.images.length > 0
                         ? `<img src="${product.images[0]}" alt="${product.title}">`
-                        : ''
+                        : `<img src="Images/placeholder-product.jpg" alt="${product.title}" style="width: 100%; height: 100%; object-fit: cover;">`
                     }
                 </div>
                 <div class="product-info">
@@ -700,7 +514,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (product.images && product.images.length > 0) {
                 mainImage.innerHTML = `<img src="${product.images[0]}" alt="${product.title}" style="max-width: 100%; max-height: 450px; object-fit: contain; border-radius: 10px;">`;
             } else {
-                mainImage.innerHTML = '<div style="font-size: 4rem; color: #999; z-index: 3; position: relative;">📦</div>';
+                mainImage.innerHTML = `<img src="Images/placeholder-product.jpg" alt="${product.title}" style="max-width: 100%; max-height: 450px; object-fit: cover; border-radius: 10px;">`;
             }
         }
 
@@ -1068,7 +882,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 html += `
                     <div class="dropdown-section ai-section">
                         <div class="dropdown-header">
-                            <span class="ai-badge">✨ AI</span>
+                            <span class="ai-badge"><img src="https://img.icons8.com/fluency/20/sparkling-diamond.png" alt="AI" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;"> AI</span>
                             <span class="section-title">You might like this</span>
                             <span class="interaction-count">${stats.totalInteractions} items viewed</span>
                         </div>
@@ -1082,7 +896,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <div class="suggestion-image">
                                 ${product.images && product.images.length > 0
                                     ? `<img src="${product.images[0]}" alt="${product.title}">`
-                                    : '<div class="placeholder-icon">📦</div>'
+                                    : '<div class="placeholder-icon"><img src="https://img.icons8.com/fluency/24/box.png" alt="Product" style="width: 24px; height: 24px;"></div>'
                                 }
                             </div>
                             <div class="suggestion-info">
@@ -1122,7 +936,7 @@ document.addEventListener('DOMContentLoaded', function () {
                             <div class="suggestion-image">
                                 ${product.images && product.images.length > 0
                                     ? `<img src="${product.images[0]}" alt="${product.title}">`
-                                    : '<div class="placeholder-icon">📦</div>'
+                                    : '<div class="placeholder-icon"><img src="https://img.icons8.com/fluency/24/box.png" alt="Product" style="width: 24px; height: 24px;"></div>'
                                 }
                             </div>
                             <div class="suggestion-info">
@@ -1145,7 +959,7 @@ document.addEventListener('DOMContentLoaded', function () {
             html = `
                 <div class="dropdown-section">
                     <div class="dropdown-message">
-                        <div class="message-icon">🔍</div>
+                        <div class="message-icon"><img src="https://img.icons8.com/fluency/48/search.png" alt="Search" style="width: 48px; height: 48px;"></div>
                         <p>Browse products to get personalized recommendations</p>
                         <small>Click on 2-3 items to activate AI suggestions</small>
                     </div>

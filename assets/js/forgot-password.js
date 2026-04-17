@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function() {
             <p class="subtitle">Check your email</p>
             
             <div class="icon-circle email-icon">
-                <span class="icon">📧</span>
+                <img src="https://img.icons8.com/fluency/48/mail.png" alt="Email" class="icon-img">
             </div>
             
             <h2>Reset link sent!</h2>

@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const tipEmailInput = document.getElementById('tipEmail');
     const signupBtn = document.getElementById('signupBtn');
 
-    registerForm.addEventListener('submit', function(e) {
+    registerForm.addEventListener('submit', async function(e) {
         e.preventDefault();
         
         if (!validateForm()) {
@@ -15,28 +15,44 @@ document.addEventListener('DOMContentLoaded', function() {
         signupBtn.textContent = 'Creating account...';
         signupBtn.disabled = true;
         
-        /*
-        Backend Integration:
-        POST /api/auth/register
+        // Convert FormData to JSON payload
+        const formData = new FormData(registerForm);
+        const payload = Object.fromEntries(formData.entries());
         
-        PHP Example:
-        $sql = "INSERT INTO users (first_name, last_name, email, student_number, department, password_hash, created_at) 
-                VALUES (?, ?, ?, ?, ?, ?, NOW())";
-        
-        After successful registration:
-        - Send email verification code
-        - Store temporary user data in session
-        - Redirect to setup-complete.html
-        */
-        
-        // For now, go directly to setup-complete (skipping security verification)
-        setTimeout(() => {
-            // Store registration data temporarily
-            sessionStorage.setItem('temp_user_email', tipEmailInput.value);
-            sessionStorage.setItem('temp_user_name', document.getElementById('firstName').value);
+        try {
+            const response = await fetch('/api/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(payload)
+            });
             
-            window.location.href = 'setup-complete.html';
-        }, 1500);
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Success: store temporary data for setup-complete page
+                sessionStorage.setItem('temp_user_email', payload.tip_email);
+                sessionStorage.setItem('temp_user_name', payload.first_name);
+                
+                // Redirect
+                window.location.href = 'setup-complete.html';
+            } else {
+                // Handle API error messages mapping
+                if (data.error && data.error.includes('exists')) {
+                    showError(tipEmailInput, data.error);
+                } else {
+                    alert('Registration failed: ' + (data.error || 'Unknown error'));
+                }
+                signupBtn.textContent = 'Sign up now';
+                signupBtn.disabled = false;
+            }
+        } catch (error) {
+            console.error('API Connect Error:', error);
+            alert('Failed to connect to server. Ensure you are running `npx wrangler pages dev .`');
+            signupBtn.textContent = 'Sign up now';
+            signupBtn.disabled = false;
+        }
     });
     
     // Real-time email validation

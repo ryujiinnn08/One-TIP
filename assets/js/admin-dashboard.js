@@ -590,13 +590,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 <td><span class="status-badge ${ann.status}">${ann.status}</span></td>
                 <td>${ann.created_by}</td>
                 <td class="action-buttons">
-                    <button class="action-btn view-btn" data-action="view" data-id="${ann.id}" title="View">👁️</button>
+                    <button class="action-btn view-btn" data-action="view" data-id="${ann.id}" title="View"><img src="https://img.icons8.com/fluency/20/visible.png" alt="View"></button>
                     ${ann.status === 'pending' ? 
-                        `<button class="action-btn approve-btn" data-action="approve" data-id="${ann.id}" title="Approve">✅</button>
-                         <button class="action-btn reject-btn" data-action="reject" data-id="${ann.id}" title="Reject">❌</button>` 
+                        `<button class="action-btn approve-btn" data-action="approve" data-id="${ann.id}" title="Approve"><img src="https://img.icons8.com/fluency/20/checked.png" alt="Approve"></button>
+                         <button class="action-btn reject-btn" data-action="reject" data-id="${ann.id}" title="Reject"><img src="https://img.icons8.com/fluency/20/cancel.png" alt="Reject"></button>` 
                         : ''
                     }
-                    <button class="action-btn delete-btn" data-action="delete" data-id="${ann.id}" title="Delete">🗑️</button>
+                    <button class="action-btn delete-btn" data-action="delete" data-id="${ann.id}" title="Delete"><img src="https://img.icons8.com/fluency/20/trash.png" alt="Delete"></button>
                 </td>
             </tr>
         `).join('');
@@ -875,8 +875,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 const actionsCell = row.querySelector('.action-buttons');
                 if (actionsCell) {
                     actionsCell.innerHTML = `
-                        <button class="action-btn view-btn" data-action="view" data-id="${announcementId}" title="View">👁️</button>
-                        <button class="action-btn delete-btn" data-action="delete" data-id="${announcementId}" title="Delete">🗑️</button>
+                        <button class="action-btn view-btn" data-action="view" data-id="${announcementId}" title="View"><img src="https://img.icons8.com/fluency/20/visible.png" alt="View"></button>
+                        <button class="action-btn delete-btn" data-action="delete" data-id="${announcementId}" title="Delete"><img src="https://img.icons8.com/fluency/20/trash.png" alt="Delete"></button>
                     `;
                     
                     // Re-attach event listeners to new buttons

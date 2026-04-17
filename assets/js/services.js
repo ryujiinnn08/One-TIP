@@ -196,199 +196,26 @@ document.addEventListener('DOMContentLoaded', function () {
         alert('Load more functionality - would load additional services in a real implementation');
     }
 
-    function loadServices() {
-        console.log('Loading services...');
+    async function loadServices() {
+        console.log('Fetching live services from D1 Database...');
         
-        // Sample services data with portfolio links
-        currentServices = [
-            {
-                id: 1,
-                title: 'Math Tutoring Service',
-                price: 100,
-                provider_name: 'Maria Santos',
-                provider_department: 'Engineering',
-                provider_rating: 4.9,
-                provider_reviews: 25,
-                vouch_count: 12,
-                vouched_by_user: false,
-                created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000),
-                description: 'Professional mathematics tutoring for all levels. Specializing in Calculus, Algebra, and Statistics. 3+ years experience helping students achieve their academic goals.',
-                category: 'tutoring',
-                delivery_time: '1_week',
-                portfolio: [
-                    { 
-                        title: 'Calculus Study Guide', 
-                        type: 'document',
-                        link: 'https://drive.google.com/file/d/1ABC123/view'
-                    },
-                    { 
-                        title: 'Statistics Tutorial Videos', 
-                        type: 'video',
-                        link: 'https://drive.google.com/drive/folders/1XYZ789'
-                    },
-                    { 
-                        title: 'Student Success Stories', 
-                        type: 'document',
-                        link: 'https://docs.google.com/document/d/1DEF456/edit'
-                    }
-                ],
-                contact_info: {
-                    chat_availability: '9:00 am - 8:00 pm',
-                    meetup_availability: 'Weekdays - Casal / Arlegui Campus',
-                    facebook: 'maria.santos.tip',
-                    email: 'maria.santos@tip.edu.ph'
-                }
-            },
-            {
-                id: 2,
-                title: 'Logo Design & Branding',
-                price: 200,
-                provider_name: 'Alex Chen',
-                provider_department: 'Arts',
-                provider_rating: 4.8,
-                provider_reviews: 18,
-                vouch_count: 15,
-                vouched_by_user: false,
-                created_at: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000),
-                description: 'Professional logo design and brand identity creation. Modern, clean designs that represent your business perfectly. Fast turnaround and unlimited revisions.',
-                category: 'design',
-                delivery_time: '3_days',
-                portfolio: [
-                    { 
-                        title: 'Restaurant Logo Portfolio', 
-                        type: 'image',
-                        link: 'https://drive.google.com/drive/folders/1LOGO123'
-                    },
-                    { 
-                        title: 'Tech Startup Branding', 
-                        type: 'image',
-                        link: 'https://behance.net/gallery/12345678/Tech-Startup-Brand'
-                    },
-                    { 
-                        title: 'Fashion Brand Identity', 
-                        type: 'image',
-                        link: 'https://drive.google.com/drive/folders/1FASHION456'
-                    },
-                    { 
-                        title: 'Process & Sketches', 
-                        type: 'document',
-                        link: 'https://docs.google.com/presentation/d/1PROCESS789/edit'
-                    }
-                ],
-                contact_info: {
-                    chat_availability: '10:00 am - 10:00 pm',
-                    meetup_availability: 'Flexible - Casal / Arlegui Campus',
-                    facebook: 'alex.chen.design',
-                    email: 'alex.chen@tip.edu.ph'
-                }
-            },
-            {
-                id: 3,
-                title: 'Programming & Web Development',
-                price: 150,
-                provider_name: 'John Reyes',
-                provider_department: 'Computer Science',
-                provider_rating: 4.7,
-                provider_reviews: 32,
-                vouch_count: 10,
-                vouched_by_user: false,
-                created_at: new Date(Date.now() - 5 * 24 * 60 * 60 * 1000),
-                description: 'Full-stack web development and programming tutoring. Python, JavaScript, PHP, React, and more. Build your first website or debug your code with expert help.',
-                category: 'programming',
-                delivery_time: '1_week',
-                portfolio: [
-                    { title: 'E-commerce Website', type: 'website' },
-                    { title: 'Mobile App Backend', type: 'document' },
-                    { title: 'Portfolio Website', type: 'website' }
-                ],
-                contact_info: {
-                    chat_availability: '7:00 am - 11:00 pm',
-                    meetup_availability: 'Anytime - Casal Campus',
-                    facebook: 'john.reyes.dev',
-                    email: 'john.reyes@tip.edu.ph'
-                }
-            },
-            {
-                id: 4,
-                title: 'Photography & Photo Editing',
-                price: 80,
-                provider_name: 'Sarah Kim',
-                provider_department: 'Arts',
-                provider_rating: 4.9,
-                provider_reviews: 28,
-                vouch_count: 8,
-                vouched_by_user: false,
-                created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
-                description: 'Professional photography for events, portraits, and products. Also offering photo editing and retouching services using Photoshop and Lightroom.',
-                category: 'photography',
-                delivery_time: '2_days',
-                portfolio: [
-                    { title: 'Event Photography', type: 'image' },
-                    { title: 'Portrait Session', type: 'image' },
-                    { title: 'Product Photography', type: 'image' }
-                ],
-                contact_info: {
-                    chat_availability: '8:00 am - 6:00 pm',
-                    meetup_availability: 'Weekdays - Arlegui Campus',
-                    facebook: 'sarah.kim.photo',
-                    email: 'sarah.kim@tip.edu.ph'
-                }
-            },
-            {
-                id: 5,
-                title: 'Music Lessons & Audio Production',
-                price: 120,
-                provider_name: 'Mike Torres',
-                provider_department: 'Arts',
-                provider_rating: 4.6,
-                provider_reviews: 15,
-                vouch_count: 5,
-                vouched_by_user: false,
-                created_at: new Date(Date.now() - 7 * 24 * 60 * 60 * 1000),
-                description: 'Guitar, piano, and music theory lessons. Also offering audio production services including mixing, mastering, and podcast editing.',
-                category: 'music',
-                delivery_time: '1_week',
-                portfolio: [
-                    { title: 'Original Song Production', type: 'audio' },
-                    { title: 'Podcast Editing', type: 'audio' },
-                    { title: 'Live Performance', type: 'video' }
-                ],
-                contact_info: {
-                    chat_availability: '2:00 pm - 9:00 pm',
-                    meetup_availability: 'Weekends - Music Studio',
-                    facebook: 'mike.torres.music',
-                    email: 'mike.torres@tip.edu.ph'
-                }
-            },
-            {
-                id: 6,
-                title: 'Business Consulting & Marketing',
-                price: 180,
-                provider_name: 'Lisa Rodriguez',
-                provider_department: 'Business',
-                provider_rating: 4.8,
-                provider_reviews: 22,
-                vouch_count: 20,
-                vouched_by_user: false,
-                created_at: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000),
-                description: 'Business plan development, market research, and digital marketing strategies. Help your startup grow with proven business techniques.',
-                category: 'business',
-                delivery_time: '2_weeks',
-                portfolio: [
-                    { title: 'Startup Business Plan', type: 'document' },
-                    { title: 'Social Media Strategy', type: 'document' },
-                    { title: 'Market Analysis Report', type: 'document' }
-                ],
-                contact_info: {
-                    chat_availability: '9:00 am - 5:00 pm',
-                    meetup_availability: 'Business Hours - Casal Campus',
-                    facebook: 'lisa.rodriguez.biz',
-                    email: 'lisa.rodriguez@tip.edu.ph'
-                }
+        try {
+            const response = await fetch('/api/posts/services');
+            const data = await response.json();
+            
+            if (response.ok && data.success) {
+                currentServices = data.posts;
+                filterAndDisplayServices();
+            } else {
+                console.error("Failed to fetch services data:", data.error);
+                currentServices = [];
+                filterAndDisplayServices();
             }
-        ];
-
-        filterAndDisplayServices();
+        } catch (error) {
+            console.error("Network error fetching services:", error);
+            currentServices = [];
+            filterAndDisplayServices();
+        }
     }
 
     function filterAndDisplayServices() {
@@ -617,7 +444,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 html += `
                     <div class="dropdown-section ai-section">
                         <div class="dropdown-header">
-                            <span class="ai-badge">✨ AI</span>
+                            <span class="ai-badge"><img src="https://img.icons8.com/fluency/20/sparkling-diamond.png" alt="AI" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;"> AI</span>
                             <span class="section-title">You might like this</span>
                             <span class="interaction-count">${stats.totalInteractions} items viewed</span>
                         </div>
@@ -629,7 +456,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     html += `
                         <div class="suggestion-item" onclick="handleServiceClick(${service.id})">
                             <div class="suggestion-image">
-                                <div class="placeholder-icon">💼</div>
+                                <div class="placeholder-icon"><img src="https://img.icons8.com/fluency/24/briefcase.png" alt="Service" style="width: 24px; height: 24px;"></div>
                             </div>
                             <div class="suggestion-info">
                                 <div class="suggestion-title">${service.title}</div>
@@ -666,7 +493,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     html += `
                         <div class="suggestion-item" onclick="handleServiceClick(${service.id})">
                             <div class="suggestion-image">
-                                <div class="placeholder-icon">💼</div>
+                                <div class="placeholder-icon"><img src="https://img.icons8.com/fluency/24/briefcase.png" alt="Service" style="width: 24px; height: 24px;"></div>
                             </div>
                             <div class="suggestion-info">
                                 <div class="suggestion-title">${service.title}</div>
@@ -688,7 +515,7 @@ document.addEventListener('DOMContentLoaded', function () {
             html = `
                 <div class="dropdown-section">
                     <div class="dropdown-message">
-                        <div class="message-icon">🔍</div>
+                        <div class="message-icon"><img src="https://img.icons8.com/fluency/48/search.png" alt="Search" style="width: 48px; height: 48px;"></div>
                         <p>Browse services to get personalized recommendations</p>
                         <small>Click on 2-3 services to activate AI suggestions</small>
                     </div>
@@ -967,8 +794,10 @@ document.addEventListener('DOMContentLoaded', function () {
         if (serviceProviderDepartment) serviceProviderDepartment.textContent = `${service.provider_department || 'Unknown'} Department`;
         if (serviceProviderRating) {
             const rating = service.provider_rating || 0;
-            const stars = '★'.repeat(Math.round(rating)) + '☆'.repeat(5 - Math.round(rating));
-            serviceProviderRating.textContent = stars;
+            const fullStar = '<img src="https://img.icons8.com/fluency/16/star.png" alt="Star" style="width: 16px; height: 16px; vertical-align: middle;">';
+            const emptyStar = '<img src="https://img.icons8.com/fluency-outline/16/star.png" alt="Star" style="width: 16px; height: 16px; vertical-align: middle;">';
+            const stars = fullStar.repeat(Math.round(rating)) + emptyStar.repeat(5 - Math.round(rating));
+            serviceProviderRating.innerHTML = stars;
         }
         if (serviceRatingCount) serviceRatingCount.textContent = `(${service.provider_reviews || 0} reviews)`;
 
@@ -1009,13 +838,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function getPortfolioIcon(type) {
         const icons = {
-            'image': '🎨',
-            'document': '📄',
-            'website': '💻',
-            'audio': '🎵',
-            'video': '🎬'
+            'image': '<img src="https://img.icons8.com/fluency/24/palette.png" alt="Image" style="width: 24px; height: 24px;">',
+            'document': '<img src="https://img.icons8.com/fluency/24/file.png" alt="Document" style="width: 24px; height: 24px;">',
+            'website': '<img src="https://img.icons8.com/fluency/24/monitor.png" alt="Website" style="width: 24px; height: 24px;">',
+            'audio': '<img src="https://img.icons8.com/fluency/24/musical-notes.png" alt="Audio" style="width: 24px; height: 24px;">',
+            'video': '<img src="https://img.icons8.com/fluency/24/movie.png" alt="Video" style="width: 24px; height: 24px;">'
         };
-        return icons[type] || '📁';
+        return icons[type] || '<img src="https://img.icons8.com/fluency/24/folder.png" alt="Folder" style="width: 24px; height: 24px;">';
     }
 
     function getPortfolioLinkText(link) {

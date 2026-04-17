@@ -164,7 +164,7 @@ document.addEventListener('DOMContentLoaded', function () {
             <p class="subtitle">Password updated successfully!</p>
             
             <div class="icon-circle success-icon">
-                <span class="icon">✓</span>
+                <img src="https://img.icons8.com/fluency/48/checkmark.png" alt="Success" class="icon-img">
             </div>
             
             <h2>All set!</h2>
@@ -184,8 +184,8 @@ document.addEventListener('DOMContentLoaded', function () {
             </div>
             <p class="subtitle">Reset link expired</p>
             
-            <div class="icon-circle" style="background-color: #dc3545;">
-                <span class="icon" style="color: white;">⚠️</span>
+            <div class="icon-circle" style="background-color: #dc3545; display: flex; align-items: center; justify-content: center;">
+                <img src="https://img.icons8.com/fluency/48/warning-shield.png" alt="Warning" class="icon-img">
             </div>
             
             <h2>Link expired</h2>

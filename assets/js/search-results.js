@@ -240,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="result-image">
                     ${result.image_url ? 
                         `<img src="${result.image_url}" alt="${result.title}">` : 
-                        `<span style="font-size: 3rem;">${result.type === 'marketplace' ? '📦' : '🛠️'}</span>`
+                        `<img src="Images/placeholder-product.jpg" alt="${result.title}" style="width: 100%; height: 100%; object-fit: cover;">`
                     }
                 </div>
                 <div class="result-info">

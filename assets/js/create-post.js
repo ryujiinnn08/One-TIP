@@ -534,93 +534,161 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function handleMarketplaceSubmit(e) {
+    const toBase64 = file => new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = error => reject(error);
+    });
+
+    async function handleMarketplaceSubmit(e) {
         e.preventDefault();
         
+        const userId = sessionStorage.getItem('user_id');
+        if (!userId) {
+            alert('You must be logged in to create a post');
+            return;
+        }
+
         const formData = {
-            title: document.getElementById('productTitle').value,
-            price: document.getElementById('productPrice').value,
-            condition: document.getElementById('productCondition').value,
-            category: document.getElementById('productCategory').value,
-            campus: document.getElementById('productCampus').value,
-            description: document.getElementById('productDescription').value,
-            images: uploadedImages
+            user_id: userId,
+            type: 'marketplace',
+            title: document.getElementById('productName').value,
+            price: document.getElementById('price').value,
+            condition_status: document.getElementById('condition').value,
+            category: document.getElementById('category').value,
+            description: document.getElementById('description').value
         };
 
-        console.log('Marketplace Post Data:', formData);
+        const imageInput = document.getElementById('images');
+        if (imageInput && imageInput.files.length > 0) {
+            const base64Images = [];
+            for (let i = 0; i < Math.min(imageInput.files.length, 5); i++) {
+                base64Images.push(await toBase64(imageInput.files[i]));
+            }
+            formData.images = base64Images;
+        }
+
+        const submitBtn = document.getElementById('createMarketplaceBtn');
+        if (submitBtn) submitBtn.textContent = 'Creating...';
         
-        // Show success alert
-        alert(`✅ Marketplace Listing Created!\n\nTitle: ${formData.title}\nPrice: ₱${formData.price}\nCategory: ${formData.category}\n\nYour listing has been posted successfully!`);
-        
-        closeCreatePostModal();
-        
-        // Optionally reload the page or update the listings
-        setTimeout(() => {
-            window.location.reload();
-        }, 500);
+        try {
+            const response = await fetch('/api/posts/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            const data = await response.json();
+            
+            if (response.ok && data.success) {
+                alert(`✅ Marketplace Listing Created!\n\nTitle: ${formData.title}\nPrice: ₱${formData.price}`);
+                closeCreatePostModal();
+                window.location.reload();
+            } else {
+                alert('Creation failed: ' + data.error);
+                if (submitBtn) submitBtn.textContent = 'Create Post';
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Server disconnected.');
+            if (submitBtn) submitBtn.textContent = 'Create Post';
+        }
     }
 
-    function handleServiceSubmit(e) {
+    async function handleServiceSubmit(e) {
         e.preventDefault();
         
+        const userId = sessionStorage.getItem('user_id');
+        if (!userId) {
+            alert('You must be logged in to create a service');
+            return;
+        }
+
         const formData = {
+            user_id: userId,
+            type: 'service',
             title: document.getElementById('serviceTitle').value,
-            price: document.getElementById('servicePrice').value,
+            price: document.getElementById('startingPrice').value,
             category: document.getElementById('serviceCategory').value,
-            delivery: document.getElementById('serviceDelivery').value,
-            description: document.getElementById('serviceDescription').value,
-            portfolio: portfolioItems
+            description: document.getElementById('serviceDescription').value
         };
 
-        console.log('Service Post Data:', formData);
-        
-        // Show success alert
-        alert(`✅ Service Listing Created!\n\nTitle: ${formData.title}\nPrice: ₱${formData.price}/hr\nCategory: ${formData.category}\n\nYour service has been posted successfully!`);
-        
-        closeCreatePostModal();
-        
-        // Optionally reload the page or update the services
-        setTimeout(() => {
-            window.location.reload();
-        }, 500);
+        const serviceImageInput = document.getElementById('serviceImages');
+        if (serviceImageInput && serviceImageInput.files.length > 0) {
+            const base64Images = [];
+            for (let i = 0; i < Math.min(serviceImageInput.files.length, 5); i++) {
+                base64Images.push(await toBase64(serviceImageInput.files[i]));
+            }
+            formData.images = base64Images;
+        }
+
+        const submitBtn = document.getElementById('createServiceBtn');
+        if (submitBtn) submitBtn.textContent = 'Creating...';
+
+        try {
+            const response = await fetch('/api/posts/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            const data = await response.json();
+            
+            if (response.ok && data.success) {
+                alert(`✅ Service Listing Created!\n\nTitle: ${formData.title}\nStarting at: ₱${formData.price}`);
+                closeCreatePostModal();
+                window.location.reload();
+            } else {
+                alert('Creation failed: ' + data.error);
+                if (submitBtn) submitBtn.textContent = 'Create Service';
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Server disconnected.');
+            if (submitBtn) submitBtn.textContent = 'Create Service';
+        }
     }
 
-    function handleAnnouncementSubmit(e) {
+    async function handleAnnouncementSubmit(e) {
         e.preventDefault();
         
-        const isAdmin = sessionStorage.getItem('user_role') === 'admin';
-        
+        const userId = sessionStorage.getItem('user_id');
+        if (!userId) {
+            alert('You must be logged in to create an announcement');
+            return;
+        }
+
         const formData = {
+            user_id: userId,
+            type: 'announcement',
             title: document.getElementById('announcementTitle').value,
             category: document.getElementById('announcementCategory').value,
-            audience: document.getElementById('announcementAudience').value,
-            specific_users: document.getElementById('specificUsers')?.value || null,
-            date: document.getElementById('announcementDate').value,
-            time: document.getElementById('announcementTime').value,
-            description: document.getElementById('announcementDescription').value,
-            priority: document.getElementById('announcementPriority').checked,
-            created_by: sessionStorage.getItem('user_id') || 'user_1',
-            status: isAdmin ? 'approved' : 'pending'
+            description: document.getElementById('announcementDescription').value
         };
 
-        console.log('Announcement Data:', formData);
+        const submitBtn = document.querySelector('#announcementForm .btn-primary');
+        if (submitBtn) submitBtn.textContent = 'Publishing...';
         
-        // Show success alert with details
-        const audienceText = formData.audience === 'all' ? 'All Students' : formData.audience.toUpperCase();
-        const priorityText = formData.priority ? ' (High Priority)' : '';
-        
-        if (isAdmin) {
-            alert(`✅ Announcement Posted Successfully!\n\n📢 ${formData.title}${priorityText}\n\nCategory: ${formData.category}\nAudience: ${audienceText}\nDate: ${formData.date} at ${formData.time}\n\n✓ Published immediately (Admin post)`);
-        } else {
-            alert(`✅ Announcement Submitted for Review!\n\n📢 ${formData.title}${priorityText}\n\nCategory: ${formData.category}\nAudience: ${audienceText}\nDate: ${formData.date} at ${formData.time}\n\n⏳ Your announcement will be reviewed by admins before being published.`);
+        try {
+            const response = await fetch('/api/posts/create', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            const data = await response.json();
+            
+            if (response.ok && data.success) {
+                alert(`✅ Announcement Pending Review!\n\n📢 ${formData.title}`);
+                closeCreatePostModal();
+                window.location.reload();
+            } else {
+                alert('Creation failed: ' + data.error);
+                if (submitBtn) submitBtn.textContent = 'Create Announcement';
+            }
+        } catch (error) {
+            console.error(error);
+            alert('Server disconnected.');
+            if (submitBtn) submitBtn.textContent = 'Create Announcement';
         }
-        
-        closeCreatePostModal();
-        
-        // Reload to show new announcement
-        setTimeout(() => {
-            window.location.reload();
-        }, 500);
     }
 
     function loadExistingPostData(postId) {

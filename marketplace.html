@@ -231,7 +231,7 @@
             <div class="report-modal-body" style="padding: 2rem;">
                 <div
                     style="background: #fff3cd; border: 1px solid #ffc107; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; color: #856404; font-size: 0.9rem;">
-                    <strong style="display: block; margin-bottom: 0.5rem;">⚠️ Important:</strong>
+                    <strong style="display: block; margin-bottom: 0.5rem;"><img src="https://img.icons8.com/fluency/20/warning-shield.png" alt="Warning" style="width: 20px; height: 20px; vertical-align: middle; margin-right: 5px;"> Important:</strong>
                     False reports may result in account restrictions. Please only report content that violates our
                     community guidelines.
                 </div>
@@ -296,7 +296,7 @@
             <div class="product-modal-body">
                 <div class="product-image-section">
                     <div class="product-main-image" id="productMainImage">
-                        <div style="font-size: 4rem; color: #999;">📦</div>
+                        <img src="https://img.icons8.com/fluency/96/box.png" alt="Product" style="width: 96px; height: 96px; opacity: 0.5;">
                     </div>
                 </div>
 
@@ -318,7 +318,7 @@
                         <p id="productDescription">Product description will be displayed here...</p>
                     </div>
 
-                    <div class="seller-info-section">
+                    <div class="seller-info">
                         <h4>Seller Information</h4>
                         <div class="seller-card">
                             <div class="seller-avatar">
@@ -329,7 +329,13 @@
                                 <div class="seller-name" id="sellerName">Seller Name</div>
                                 <div class="seller-department" id="sellerDepartment">Department</div>
                                 <div class="seller-rating">
-                                    <span class="rating-stars">★★★★★</span>
+                                    <span class="rating-stars" id="sellerRating">
+                                        <img src="https://img.icons8.com/fluency/16/star.png" alt="Star" style="width: 16px; height: 16px;">
+                                        <img src="https://img.icons8.com/fluency/16/star.png" alt="Star" style="width: 16px; height: 16px;">
+                                        <img src="https://img.icons8.com/fluency/16/star.png" alt="Star" style="width: 16px; height: 16px;">
+                                        <img src="https://img.icons8.com/fluency/16/star.png" alt="Star" style="width: 16px; height: 16px;">
+                                        <img src="https://img.icons8.com/fluency/16/star.png" alt="Star" style="width: 16px; height: 16px;">
+                                    </span>
                                     <span class="rating-count" id="ratingCount">(0 vouches)</span>
                                 </div>
                             </div>
@@ -411,18 +417,7 @@
     <script src="assets/js/create-post.js"></script>
     <script src="assets/js/notifications.js"></script>
     
-    <!-- Demo Helper Script -->
-    <script>
-        // Press "D" to enable debug mode
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'd' || e.key === 'D') {
-                if (window.aiRecommendations) {
-                    window.aiRecommendations.enableDebug();
-                    alert('🤖 AI Debug Mode Enabled!\n\nWatch the bottom-right corner for tracking.\n\nClick products to see recommendations in the search bar!');
-                }
-            }
-        });
-    </script>
+
 </body>
 
 </html>

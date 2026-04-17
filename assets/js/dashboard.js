@@ -138,7 +138,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // Dashboard Statistics Loading
     function loadDashboardStats() {
-        fetch('/api/dashboard/stats', {
+        const userId = sessionStorage.getItem('user_id');
+        if (!userId) return;
+
+        fetch(`/api/dashboard/stats?user_id=${userId}`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + getAuthToken(),
@@ -191,7 +194,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // User Listings Loading
     function loadUserListings() {
-        fetch('/api/user/listings', {
+        const userId = sessionStorage.getItem('user_id');
+        if (!userId) return;
+
+        fetch(`/api/user/listings?user_id=${userId}`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + getAuthToken(),
@@ -258,7 +264,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (serviceListings && serviceListings.length > 0) {
                 serviceContainer.innerHTML = serviceListings.map(service => `
                     <div class="service-card" data-service-id="${service.id}">
-                        <div class="service-icon">${service.icon || '💼'}</div>
+                        <div class="service-icon">${service.icon || '<img src="https://img.icons8.com/fluency/24/briefcase.png" alt="Service" style="width: 24px; height: 24px;">'}</div>
                         <div class="service-info">
                             <h4>${service.title}</h4>
                             <p>${service.description.substring(0, 100)}...</p>
@@ -314,7 +320,7 @@ document.addEventListener('DOMContentLoaded', function () {
             order_count: 12,
             rating: '4.9',
             review_count: 25,
-            icon: '💰'
+            icon: '<img src="https://img.icons8.com/fluency/24/money.png" alt="Money" style="width: 24px; height: 24px;">'
         }];
 
         displayUserListings(sampleMarketplace, sampleServices);
@@ -427,38 +433,7 @@ document.addEventListener('DOMContentLoaded', function () {
     function displaySampleActivity() {
         console.log('Displaying sample activities...');
 
-        const sampleActivities = [
-            {
-                id: 1,
-                message: 'Someone liked your MacBook M4 listing',
-                action_text: '+1 like',
-                created_at: new Date(Date.now() - 2 * 60 * 60 * 1000)
-            },
-            {
-                id: 2,
-                message: 'Received a vouch for tutoring service',
-                action_text: '+1 vouch',
-                created_at: new Date(Date.now() - 5 * 60 * 60 * 1000)
-            },
-            {
-                id: 3,
-                message: 'Posted tutoring service',
-                action_text: 'New service',
-                created_at: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000)
-            },
-            {
-                id: 4,
-                message: 'Someone viewed your MacBook M4 listing',
-                action_text: '+1 view',
-                created_at: new Date(Date.now() - 3 * 24 * 60 * 60 * 1000)
-            },
-            {
-                id: 5,
-                message: 'Your listing was featured',
-                action_text: 'Featured',
-                created_at: new Date(Date.now() - 4 * 24 * 60 * 60 * 1000)
-            }
-        ];
+        const sampleActivities = [];
 
         console.log('Sample activities created:', sampleActivities);
         displayRecentActivity(sampleActivities);
@@ -542,35 +517,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function displaySampleNotifications() {
-        const sampleNotifications = [
-            {
-                id: 1,
-                title: 'Someone viewed your MacBook Pro',
-                message: 'Your "MacBook Pro 13" 2022 listing received a new view',
-                created_at: new Date(Date.now() - 2 * 60 * 60 * 1000),
-                is_read: false,
-                icon: '<img src="Images/eye-icon.svg" alt="View" style="width: 20px; height: 20px;">',
-                sender_username: null
-            },
-            {
-                id: 2,
-                title: 'New vouch received!',
-                message: 'Maria Santos gave you a vouch for your Math tutoring service',
-                created_at: new Date(Date.now() - 5 * 60 * 60 * 1000),
-                is_read: false,
-                icon: '<img src="Images/star-icon.svg" alt="Star" style="width: 20px; height: 20px;">',
-                sender_username: 'mariasantos'
-            },
-            {
-                id: 3,
-                title: 'Interest in your service',
-                message: 'Someone is interested in your Logo Design service',
-                created_at: new Date(Date.now() - 24 * 60 * 60 * 1000),
-                is_read: false,
-                icon: '<img src="Images/business-bag-icon.svg" alt="Business" style="width: 20px; height: 20px;">',
-                sender_username: null
-            }
-        ];
+        const sampleNotifications = [];
 
         displayNotifications(sampleNotifications);
     }
@@ -798,39 +745,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (!announcementsList) return;
 
-        // Sample announcements
-        const announcements = [
-            {
-                id: 1,
-                title: 'Final Exam Schedule Released',
-                category: 'academic',
-                description: 'The final examination schedule for the current semester has been released. Please check your student portal for your specific exam dates and times. Good luck with your preparations!',
-                target: 'All Students',
-                date: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000),
-                priority: 'high',
-                created_by: 'Admin Office'
-            },
-            {
-                id: 2,
-                title: 'Campus Maintenance This Weekend',
-                category: 'general',
-                description: 'Please be informed that there will be scheduled maintenance work on campus facilities this Saturday and Sunday. Some areas may be temporarily inaccessible.',
-                target: 'All Students',
-                date: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-                priority: 'medium',
-                created_by: 'Facilities Management'
-            },
-            {
-                id: 3,
-                title: 'TIP Foundation Day - February 8',
-                category: 'event',
-                description: 'Join us in celebrating TIP Foundation Day! Various activities, competitions, and programs are lined up. Mark your calendars and participate!',
-                target: 'All Students',
-                date: new Date('2024-02-08'),
-                priority: 'high',
-                created_by: 'Student Affairs'
-            }
-        ];
+        const announcements = [];
 
         if (announcements.length === 0) {
             announcementsList.innerHTML = `
@@ -856,12 +771,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     </div>
                     <p class="announcement-description">${announcement.description}</p>
                     <div class="announcement-footer">
-                        <span class="announcement-target">
-                            👥 ${announcement.target}
-                        </span>
-                        <span class="announcement-date">
-                            📅 ${formatAnnouncementDate(announcement.date)}
-                        </span>
+                        <div class="announcement-meta">
+                            <span><img src="https://img.icons8.com/fluency/16/conference-call.png" alt="Target" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px;"> ${announcement.target}</span>
+                            <span><img src="https://img.icons8.com/fluency/16/calendar.png" alt="Date" style="width: 16px; height: 16px; vertical-align: middle; margin-right: 4px; margin-left: 10px;"> ${formatAnnouncementDate(announcement.date)}</span>
+                        </div>
                     </div>
                 </div>
             `;
