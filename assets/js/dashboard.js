@@ -238,7 +238,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 </span>
                                 <span class="listing-likes">
                                     <img src="Images/heart-icon.svg" alt="Likes" style="width: 16px; height: 16px; margin-right: 4px;">
-                                    ${listing.like_count} likes
+                                    ${listing.like_count || 0} likes
                                 </span>
                             </div>
                         </div>

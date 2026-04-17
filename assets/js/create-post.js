@@ -44,7 +44,23 @@ document.addEventListener('DOMContentLoaded', function() {
     window.loadCreatePostForm = function(type = 'marketplace', editId = null) {
         currentPostType = type;
         editingPostId = editId;
+        const isEditing = editId !== null;
         
+        // Update Modal styling for editing vs creating
+        const modalHeader = document.querySelector('.modal-header h2');
+        const modalDesc = document.querySelector('.modal-header p');
+        const typeSelection = document.querySelector('.post-type-selection');
+        
+        if (modalHeader) {
+            modalHeader.textContent = isEditing ? 'Edit Post' : 'Create New Post';
+        }
+        if (modalDesc) {
+            modalDesc.style.display = isEditing ? 'none' : 'block';
+        }
+        if (typeSelection) {
+            typeSelection.style.display = isEditing ? 'none' : 'flex';
+        }
+
         // Update active button
         postTypeButtons.forEach(btn => {
             btn.classList.toggle('active', btn.dataset.type === type);
@@ -754,6 +770,14 @@ document.addEventListener('DOMContentLoaded', function() {
         if (modal) modal.style.display = 'none';
         editingPostId = null;
         if (formContainer) formContainer.innerHTML = '';
+        
+        const modalHeader = document.querySelector('.modal-header h2');
+        const modalDesc = document.querySelector('.modal-header p');
+        const typeSelection = document.querySelector('.post-type-selection');
+        
+        if (modalHeader) modalHeader.textContent = 'Create New Post';
+        if (modalDesc) modalDesc.style.display = 'block';
+        if (typeSelection) typeSelection.style.display = 'flex';
         
         const submitBtn = document.querySelector('.btn-primary');
         if (submitBtn) {
