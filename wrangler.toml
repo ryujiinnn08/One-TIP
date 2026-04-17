@@ -1,8 +1,9 @@
 name = "one-tip-marketplace"
 compatibility_date = "2024-10-06"
 
-# Static site configuration for Cloudflare Pages
-pages_build_output_dir = "."
+# Serve static assets directly from the root folder
+[assets]
+directory = "."
 
 # Cloudflare D1 Database Binding
 [[d1_databases]]
