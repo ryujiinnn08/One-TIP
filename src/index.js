@@ -5,7 +5,7 @@ import { onRequestGet as marketplaceHandler } from '../functions/api/posts/marke
 import { onRequestGet as servicesHandler } from '../functions/api/posts/services.js';
 import { onRequestGet as statsHandler } from '../functions/api/dashboard/stats.js';
 import { onRequestGet as listingsHandler } from '../functions/api/user/listings.js';
-import { onRequestGet as getPostHandler, onRequestDelete as deletePostHandler } from '../functions/api/posts/[id].js';
+import { onRequestGet as getPostHandler, onRequestDelete as deletePostHandler } from '../functions/api/posts/single.js';
 import { onRequestPost as updatePostHandler } from '../functions/api/posts/update.js';
 
 export default {
