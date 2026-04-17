@@ -60,7 +60,10 @@ export async function onRequestGet({ env, params }) {
             images: images
         }), {
             status: 200,
-            headers: { 'Content-Type': 'application/json' }
+            headers: { 
+                'Content-Type': 'application/json',
+                'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
+            }
         });
         
     } catch (error) {

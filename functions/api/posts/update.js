@@ -21,10 +21,13 @@ export async function onRequestPost({ request, env }) {
         }
         
         const db = env.DB;
+        const numPostId = parseInt(post_id, 10);
+        const numUserId = parseInt(user_id, 10);
+        const numPrice = parseFloat(price) || 0.0;
         
         // Ensure user owns post
         const post = await db.prepare("SELECT id FROM posts WHERE id = ? AND user_id = ?")
-            .bind(post_id, user_id).first();
+            .bind(numPostId, numUserId).first();
             
         if (!post) {
             return new Response(JSON.stringify({ error: 'Unauthorized or post does not exist' }), { status: 403 });
@@ -37,11 +40,11 @@ export async function onRequestPost({ request, env }) {
         `).bind(
             title,
             description,
-            parseFloat(price) || 0.0,
+            numPrice,
             category || '',
             condition_status,
-            post_id,
-            user_id
+            numPostId,
+            numUserId
         ).run();
         
         if (success) {
@@ -49,14 +52,14 @@ export async function onRequestPost({ request, env }) {
             if (body.images && body.images.length > 0) {
                 try {
                     // First, delete existing images
-                    await db.prepare("DELETE FROM post_images WHERE post_id = ?").bind(post_id).run();
+                    await db.prepare("DELETE FROM post_images WHERE post_id = ?").bind(numPostId).run();
                     
                     // Insert new images
                     const stmts = body.images.map((img, index) => {
                         return db.prepare(`
                             INSERT INTO post_images (post_id, image_url, is_main)
                             VALUES (?, ?, ?)
-                        `).bind(post_id, img, index === 0 ? 1 : 0);
+                        `).bind(numPostId, img, index === 0 ? 1 : 0);
                     });
                     await db.batch(stmts);
                 } catch (imgError) {
@@ -69,7 +72,10 @@ export async function onRequestPost({ request, env }) {
                 message: 'Post updated successfully'
             }), {
                 status: 200,
-                headers: { 'Content-Type': 'application/json' }
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'Cache-Control': 'no-store, no-cache, must-revalidate, proxy-revalidate'
+                }
             });
         } else {
             throw new Error("Update operation failed");
