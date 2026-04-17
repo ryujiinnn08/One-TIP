@@ -26,12 +26,8 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // Redirect to dashboard after username setup
         setTimeout(() => {
-            // Store user session data (this would normally come from backend)
-            sessionStorage.setItem('auth_token', 'demo_token_' + Date.now());
-            sessionStorage.setItem('user_id', 'demo_user_1');
-            sessionStorage.setItem('username', username);
-            
-            window.location.href = 'dashboard.html';
+            alert('Setup complete! Please log in to your new account.');
+            window.location.href = 'index.html';
         }, 1500);
     });
     
