@@ -44,7 +44,7 @@
                 <!-- Notification Icon with Badge -->
                 <div class="notification-icon" id="notificationIcon">
                     <!-- Backend: Get unread notification count from DB -->
-                    <span class="notification-badge" id="notificationBadge">3</span>
+                    <span class="notification-badge" id="notificationBadge" style="display: none;">0</span>
                     <img src="Images/notification-icon.svg" alt="Notifications" class="notification-img">
                 </div>
 
@@ -52,7 +52,7 @@
                 <div class="user-profile" id="userProfile">
                     <!-- Backend: Get user data from session -->
                     <img src="Images/profile-icon.png" alt="User" class="profile-img" id="userAvatar">
-                    <span class="username" id="displayUsername">@username</span>
+                    <span class="username" id="displayUsername">@user</span>
                 </div>
             </div>
         </div>
@@ -80,24 +80,24 @@
             -->
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-number" id="activeListings" data-user-id="">3</div>
+                    <div class="stat-number" id="activeListings" data-user-id="">0</div>
                     <div class="stat-label">Active Listings</div>
-                    <div class="stat-sublabel" id="listingsBreakdown">3 marketplace | 0 service</div>
+                    <div class="stat-sublabel" id="listingsBreakdown">0 marketplace | 0 service</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="totalVouches">40</div>
+                    <div class="stat-number" id="totalVouches">0</div>
                     <div class="stat-label">Total Vouches</div>
-                    <div class="stat-sublabel" id="vouchesThisMonth">+8 this month</div>
+                    <div class="stat-sublabel" id="vouchesThisMonth">+0 this month</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="totalLikes">47</div>
+                    <div class="stat-number" id="totalLikes">0</div>
                     <div class="stat-label">Total Likes</div>
-                    <div class="stat-sublabel" id="likesThisWeek">+5 this week</div>
+                    <div class="stat-sublabel" id="likesThisWeek">+0 this week</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="servicesActive">1</div>
+                    <div class="stat-number" id="servicesActive">0</div>
                     <div class="stat-label">Services Active</div>
-                    <div class="stat-sublabel">1 service</div>
+                    <div class="stat-sublabel">0 services</div>
                 </div>
             </div>
 
@@ -224,10 +224,10 @@
     <div id="notificationPanel" class="notification-panel">
         <div class="notification-header">
             <h3>Notifications</h3>
-            <span class="notification-count" id="notificationCount">3 unread notifications</span>
+            <span class="notification-count" id="notificationCount">0 unread notifications</span>
             <div class="notification-actions">
                 <button class="notification-btn active" data-filter="all">All</button>
-                <button class="notification-btn" data-filter="unread">Unread (3)</button>
+                <button class="notification-btn" data-filter="unread">Unread (0)</button>
                 <button class="notification-btn" id="markAllRead">Mark all read</button>
             </div>
         </div>
@@ -241,8 +241,8 @@
         <div class="profile-header">
             <img src="Images/profile-icon.png" alt="User" class="dropdown-avatar">
             <div class="profile-details">
-                <div class="profile-name" id="profileName">Francia Ruz</div>
-                <div class="profile-email" id="profileEmail">mfaruzgal@tip.edu.ph</div>
+                <div class="profile-name" id="profileName">User</div>
+                <div class="profile-email" id="profileEmail">user@tip.edu.ph</div>
             </div>
         </div>
         <div class="profile-menu">
@@ -304,8 +304,8 @@
                                     class="seller-profile-img">
                             </div>
                             <div class="seller-details">
-                                <div class="seller-name" id="sellerName">John Doe</div>
-                                <div class="seller-department" id="sellerDepartment">CCS Department</div>
+                                <div class="seller-name" id="sellerName">Seller</div>
+                                <div class="seller-department" id="sellerDepartment">Department</div>
                                 <div class="seller-rating">
                                     <span class="rating-stars" id="sellerRating">
                                         <img src="https://img.icons8.com/fluency/16/star.png" alt="Star" style="width: 16px; height: 16px;">
@@ -314,7 +314,7 @@
                                         <img src="https://img.icons8.com/fluency/16/star.png" alt="Star" style="width: 16px; height: 16px;">
                                         <img src="https://img.icons8.com/fluency/16/star.png" alt="Star" style="width: 16px; height: 16px;">
                                     </span>
-                                    <span class="rating-count" id="ratingCount">(15 vouches)</span>
+                                    <span class="rating-count" id="ratingCount">(0 vouches)</span>
                                 </div>
                             </div>
                         </div>

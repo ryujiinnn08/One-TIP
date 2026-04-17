@@ -301,30 +301,6 @@ document.addEventListener('DOMContentLoaded', function () {
         setupListingActionListeners();
     }
 
-    function displaySampleListings() {
-        const sampleMarketplace = [{
-            id: 1,
-            title: 'MacBook M4 Chip H1 2023',
-            description: 'Barely used MacBook with M4 chip. Perfect for programming and design work.',
-            price: '33000',
-            view_count: 24,
-            like_count: 5,
-            image_url: 'Images/placeholder-product.jpg'
-        }];
-
-        const sampleServices = [{
-            id: 1,
-            title: 'Math Tutoring & Logo Design',
-            description: 'Advanced mathematics tutoring and professional logo design. 3 years experience, helped 50+ students.',
-            price: '100',
-            order_count: 12,
-            rating: '4.9',
-            review_count: 25,
-            icon: '<img src="https://img.icons8.com/fluency/24/money.png" alt="Money" style="width: 24px; height: 24px;">'
-        }];
-
-        displayUserListings(sampleMarketplace, sampleServices);
-    }
 
     function setupListingActionListeners() {
         // Edit buttons
@@ -402,9 +378,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 console.error('Error loading recent activity:', error);
-                // Always show sample activity for demo
-                console.log('Loading sample activity data...');
-                displaySampleActivity();
+                displayRecentActivity([]);
             });
     }
 
@@ -435,14 +409,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function displaySampleActivity() {
-        console.log('Displaying sample activities...');
-
-        const sampleActivities = [];
-
-        console.log('Sample activities created:', sampleActivities);
-        displayRecentActivity(sampleActivities);
-    }
 
     // Notification Functions
     function toggleNotificationPanel() {
@@ -477,7 +443,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 console.error('Error loading notifications:', error);
-                displaySampleNotifications();
+                displayNotifications([]);
             });
     }
 
@@ -521,11 +487,6 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    function displaySampleNotifications() {
-        const sampleNotifications = [];
-
-        displayNotifications(sampleNotifications);
-    }
 
     function setupNotificationClickHandlers() {
         // Click on notification item
