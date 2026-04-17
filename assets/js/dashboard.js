@@ -349,10 +349,10 @@ document.addEventListener('DOMContentLoaded', function () {
     function handleEditListing(id, type) {
         console.log(`Editing ${type} listing with ID: ${id}`);
         // Ensure we're calling the global window function
-        if (typeof window.openCreatePostModal === 'function') {
-            window.openCreatePostModal(type, id);
+        if (typeof window.openEditPostModal === 'function') {
+            window.openEditPostModal(type, id);
         } else {
-            console.error("window.openCreatePostModal is missing!");
+            console.error("window.openEditPostModal is missing!");
         }
     }
 

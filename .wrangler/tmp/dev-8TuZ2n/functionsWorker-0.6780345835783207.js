@@ -252,7 +252,98 @@ async function onRequestPost3({ request, env }) {
 }
 __name(onRequestPost3, "onRequestPost3");
 __name2(onRequestPost3, "onRequestPost");
-async function onRequestGet2({ env }) {
+async function onRequestDelete({ request, env, params }) {
+  try {
+    const postId = params.id;
+    if (!postId) {
+      return new Response(JSON.stringify({ error: "Post ID is required" }), { status: 400 });
+    }
+    const authHeader = request.headers.get("Authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    }
+    const db = env.DB;
+    const { success } = await db.prepare("DELETE FROM posts WHERE id = ?").bind(postId).run();
+    if (success) {
+      return new Response(JSON.stringify({
+        success: true,
+        message: "Post deleted successfully"
+      }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      });
+    } else {
+      throw new Error("Delete operation failed");
+    }
+  } catch (error) {
+    console.error("Delete Post Error:", error);
+    return new Response(JSON.stringify({ error: "Failed to delete post" }), { status: 500 });
+  }
+}
+__name(onRequestDelete, "onRequestDelete");
+__name2(onRequestDelete, "onRequestDelete");
+async function onRequestGet2({ env, params }) {
+  try {
+    const postId = params.id;
+    if (!postId) {
+      return new Response(JSON.stringify({ error: "Post ID is required" }), { status: 400 });
+    }
+    const db = env.DB;
+    const post = await db.prepare(`
+            SELECT p.*, u.username as seller_username, u.department as seller_department, 
+                   u.rating as seller_rating, u.profile_image_url as seller_avatar
+            FROM posts p
+            LEFT JOIN users u ON p.user_id = u.id
+            WHERE p.id = ?
+        `).bind(postId).first();
+    if (!post) {
+      return new Response(JSON.stringify({ error: "Post not found" }), { status: 404 });
+    }
+    let images = [];
+    if (post.type !== "announcement") {
+      const { results } = await db.prepare("SELECT image_url, is_main FROM post_images WHERE post_id = ? ORDER BY is_main DESC, id ASC").bind(postId).all();
+      if (results) images = results;
+    }
+    let mappedPost = { ...post };
+    if (post.type === "marketplace") {
+      mappedPost = {
+        ...mappedPost,
+        productName: post.title,
+        condition: post.condition_status
+      };
+    } else if (post.type === "service") {
+      mappedPost = {
+        ...mappedPost,
+        serviceTitle: post.title,
+        startingPrice: post.price,
+        serviceCategory: post.category,
+        serviceDescription: post.description,
+        deliveryTime: post.condition_status
+        // Reused field
+      };
+    } else if (post.type === "announcement") {
+      mappedPost = {
+        ...mappedPost,
+        announcementTitle: post.title,
+        announcementCategory: post.category,
+        announcementDescription: post.description
+      };
+    }
+    return new Response(JSON.stringify({
+      success: true,
+      post: mappedPost,
+      images
+    }), {
+      status: 200,
+      headers: { "Content-Type": "application/json" }
+    });
+  } catch (error) {
+    console.error("Get Post Error:", error);
+    return new Response(JSON.stringify({ error: "Database error while fetching post" }), { status: 500 });
+  }
+}
+__name(onRequestGet2, "onRequestGet2");
+__name2(onRequestGet2, "onRequestGet");
+async function onRequestGet3({ env }) {
   try {
     const db = env.DB;
     const { results } = await db.prepare(`
@@ -295,9 +386,9 @@ async function onRequestGet2({ env }) {
     });
   }
 }
-__name(onRequestGet2, "onRequestGet2");
-__name2(onRequestGet2, "onRequestGet");
-async function onRequestGet3({ env }) {
+__name(onRequestGet3, "onRequestGet3");
+__name2(onRequestGet3, "onRequestGet");
+async function onRequestGet4({ env }) {
   try {
     const db = env.DB;
     const { results } = await db.prepare(`
@@ -340,9 +431,68 @@ async function onRequestGet3({ env }) {
     });
   }
 }
-__name(onRequestGet3, "onRequestGet3");
-__name2(onRequestGet3, "onRequestGet");
-async function onRequestGet4({ request, env }) {
+__name(onRequestGet4, "onRequestGet4");
+__name2(onRequestGet4, "onRequestGet");
+async function onRequestPost4({ request, env }) {
+  try {
+    const body = await request.json();
+    const {
+      post_id,
+      user_id,
+      type,
+      // 'marketplace', 'service', 'announcement'
+      title,
+      description,
+      price = 0,
+      category,
+      condition_status = null
+    } = body;
+    if (!post_id || !user_id || !type || !title || !description) {
+      return new Response(JSON.stringify({ error: "Missing required fields" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json" }
+      });
+    }
+    const db = env.DB;
+    const post = await db.prepare("SELECT id FROM posts WHERE id = ? AND user_id = ?").bind(post_id, user_id).first();
+    if (!post) {
+      return new Response(JSON.stringify({ error: "Unauthorized or post does not exist" }), { status: 403 });
+    }
+    const { success } = await db.prepare(`
+            UPDATE posts 
+            SET title = ?, description = ?, price = ?, category = ?, condition_status = ?, updated_at = CURRENT_TIMESTAMP
+            WHERE id = ? AND user_id = ?
+        `).bind(
+      title,
+      description,
+      parseFloat(price) || 0,
+      category || "",
+      condition_status,
+      post_id,
+      user_id
+    ).run();
+    if (success) {
+      return new Response(JSON.stringify({
+        success: true,
+        message: "Post updated successfully"
+      }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" }
+      });
+    } else {
+      throw new Error("Update operation failed");
+    }
+  } catch (error) {
+    console.error("Update Post Error:", error);
+    return new Response(JSON.stringify({ error: "Failed to update post. " + error.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" }
+    });
+  }
+}
+__name(onRequestPost4, "onRequestPost4");
+__name2(onRequestPost4, "onRequestPost");
+async function onRequestGet5({ request, env }) {
   try {
     const url = new URL(request.url);
     const userId = url.searchParams.get("user_id");
@@ -377,8 +527,8 @@ async function onRequestGet4({ request, env }) {
     return new Response(JSON.stringify({ error: "Failed to load listings" }), { status: 500 });
   }
 }
-__name(onRequestGet4, "onRequestGet4");
-__name2(onRequestGet4, "onRequestGet");
+__name(onRequestGet5, "onRequestGet5");
+__name2(onRequestGet5, "onRequestGet");
 var routes = [
   {
     routePath: "/api/auth/login",
@@ -409,25 +559,46 @@ var routes = [
     modules: [onRequestPost3]
   },
   {
-    routePath: "/api/posts/marketplace",
+    routePath: "/api/posts/delete",
+    mountPath: "/api/posts",
+    method: "DELETE",
+    middlewares: [],
+    modules: [onRequestDelete]
+  },
+  {
+    routePath: "/api/posts/get",
     mountPath: "/api/posts",
     method: "GET",
     middlewares: [],
     modules: [onRequestGet2]
   },
   {
-    routePath: "/api/posts/services",
+    routePath: "/api/posts/marketplace",
     mountPath: "/api/posts",
     method: "GET",
     middlewares: [],
     modules: [onRequestGet3]
   },
   {
+    routePath: "/api/posts/services",
+    mountPath: "/api/posts",
+    method: "GET",
+    middlewares: [],
+    modules: [onRequestGet4]
+  },
+  {
+    routePath: "/api/posts/update",
+    mountPath: "/api/posts",
+    method: "POST",
+    middlewares: [],
+    modules: [onRequestPost4]
+  },
+  {
     routePath: "/api/user/listings",
     mountPath: "/api/user",
     method: "GET",
     middlewares: [],
-    modules: [onRequestGet4]
+    modules: [onRequestGet5]
   }
 ];
 function lexer(str) {
@@ -1095,7 +1266,7 @@ var jsonError2 = /* @__PURE__ */ __name(async (request, env, _ctx, middlewareCtx
 }, "jsonError");
 var middleware_miniflare3_json_error_default2 = jsonError2;
 
-// .wrangler/tmp/bundle-WEQv2v/middleware-insertion-facade.js
+// .wrangler/tmp/bundle-8yVm88/middleware-insertion-facade.js
 var __INTERNAL_WRANGLER_MIDDLEWARE__2 = [
   middleware_ensure_req_body_drained_default2,
   middleware_miniflare3_json_error_default2
@@ -1127,7 +1298,7 @@ function __facade_invoke__2(request, env, ctx, dispatch, finalMiddleware) {
 }
 __name(__facade_invoke__2, "__facade_invoke__");
 
-// .wrangler/tmp/bundle-WEQv2v/middleware-loader.entry.ts
+// .wrangler/tmp/bundle-8yVm88/middleware-loader.entry.ts
 var __Facade_ScheduledController__2 = class ___Facade_ScheduledController__2 {
   constructor(scheduledTime, cron, noRetry) {
     this.scheduledTime = scheduledTime;
