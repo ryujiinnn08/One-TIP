@@ -348,7 +348,12 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function handleEditListing(id, type) {
         console.log(`Editing ${type} listing with ID: ${id}`);
-        openCreatePostModal(type, id);
+        // Ensure we're calling the global window function
+        if (typeof window.openCreatePostModal === 'function') {
+            window.openCreatePostModal(type, id);
+        } else {
+            console.error("window.openCreatePostModal is missing!");
+        }
     }
 
     function handleDeleteListing(id, type) {
@@ -869,8 +874,10 @@ document.addEventListener('DOMContentLoaded', function () {
         const modal = document.getElementById('createPostModal');
         if (modal) {
             modal.style.display = 'block';
-            if (typeof loadCreatePostForm === 'function') {
-                loadCreatePostForm(type, editId);
+            if (typeof window.loadCreatePostForm === 'function') {
+                window.loadCreatePostForm(type, editId);
+            } else {
+                console.error("window.loadCreatePostForm is not a function. create-post.js might not be loaded properly.");
             }
         }
     };
