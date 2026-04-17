@@ -1,3 +1,5 @@
+# Cloudflare Pages Configuration
+# D1 Database binding "DB" configured via dashboard
 name = "one-tip-marketplace"
 compatibility_date = "2024-10-06"
 
