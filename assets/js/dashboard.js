@@ -154,14 +154,14 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 console.error('Error loading dashboard stats:', error);
-                // Show fallback data
+                // Show fallback zero data instead of fake numbers
                 updateStatsDisplay({
-                    marketplace_count: 3,
-                    service_count: 1,
-                    total_vouches: 40,
-                    total_likes: 47,
-                    vouches_this_month: 8,
-                    likes_this_week: 5
+                    marketplace_count: 0,
+                    service_count: 0,
+                    total_vouches: 0,
+                    total_likes: 0,
+                    vouches_this_month: 0,
+                    likes_this_week: 0
                 });
             });
     }
@@ -210,7 +210,7 @@ document.addEventListener('DOMContentLoaded', function () {
             })
             .catch(error => {
                 console.error('Error loading user listings:', error);
-                displaySampleListings();
+                displayUserListings([], []); // Display empty instead of samples
             });
     }
 

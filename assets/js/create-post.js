@@ -569,11 +569,17 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.images = base64Images;
         }
 
+        if (editingPostId) {
+            formData.post_id = editingPostId;
+        }
+
+        const endpoint = editingPostId ? '/api/posts/update' : '/api/posts/create';
+
         const submitBtn = document.getElementById('createMarketplaceBtn');
-        if (submitBtn) submitBtn.textContent = 'Creating...';
+        if (submitBtn) submitBtn.textContent = editingPostId ? 'Updating...' : 'Creating...';
         
         try {
-            const response = await fetch('/api/posts/create', {
+            const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
@@ -622,11 +628,17 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.images = base64Images;
         }
 
+        if (editingPostId) {
+            formData.post_id = editingPostId;
+        }
+
+        const endpoint = editingPostId ? '/api/posts/update' : '/api/posts/create';
+
         const submitBtn = document.getElementById('createServiceBtn');
-        if (submitBtn) submitBtn.textContent = 'Creating...';
+        if (submitBtn) submitBtn.textContent = editingPostId ? 'Updating...' : 'Creating...';
 
         try {
-            const response = await fetch('/api/posts/create', {
+            const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)
@@ -665,11 +677,17 @@ document.addEventListener('DOMContentLoaded', function() {
             description: document.getElementById('announcementDescription').value
         };
 
+        if (editingPostId) {
+            formData.post_id = editingPostId;
+        }
+
+        const endpoint = editingPostId ? '/api/posts/update' : '/api/posts/create';
+
         const submitBtn = document.querySelector('#announcementForm .btn-primary');
-        if (submitBtn) submitBtn.textContent = 'Publishing...';
+        if (submitBtn) submitBtn.textContent = editingPostId ? 'Updating...' : 'Publishing...';
         
         try {
-            const response = await fetch('/api/posts/create', {
+            const response = await fetch(endpoint, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(formData)

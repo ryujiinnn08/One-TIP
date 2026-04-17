@@ -5,6 +5,9 @@ import { onRequestGet as marketplaceHandler } from '../functions/api/posts/marke
 import { onRequestGet as servicesHandler } from '../functions/api/posts/services.js';
 import { onRequestGet as statsHandler } from '../functions/api/dashboard/stats.js';
 import { onRequestGet as listingsHandler } from '../functions/api/user/listings.js';
+import { onRequestGet as getPostHandler } from '../functions/api/posts/get.js';
+import { onRequestPost as updatePostHandler } from '../functions/api/posts/update.js';
+import { onRequestDelete as deletePostHandler } from '../functions/api/posts/delete.js';
 
 export default {
     async fetch(request, env, ctx) {
@@ -26,6 +29,22 @@ export default {
             if (path === '/api/posts/create' && method === 'POST') {
                 return await createPostHandler(context);
             }
+            if (path === '/api/posts/update' && method === 'POST') {
+                return await updatePostHandler(context);
+            }
+
+            // Dynamic routes for single post
+            const postMatch = path.match(/^\/api\/posts\/(\d+)$/);
+            if (postMatch) {
+                context.params.id = postMatch[1];
+                if (method === 'GET') {
+                    return await getPostHandler(context);
+                }
+                if (method === 'DELETE') {
+                    return await deletePostHandler(context);
+                }
+            }
+
             if (path === '/api/posts/marketplace' && method === 'GET') {
                 return await marketplaceHandler(context);
             }
