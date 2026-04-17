@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const formContainer = document.getElementById('createPostForm');
     
     let currentPostType = 'marketplace';
-    let editingPostId = null;
     let portfolioItems = [];
 
     // Only set up handlers if modal exists
@@ -36,30 +35,28 @@ document.addEventListener('DOMContentLoaded', function() {
             postTypeButtons.forEach(b => b.classList.remove('active'));
             this.classList.add('active');
             currentPostType = this.dataset.type;
-            loadCreatePostForm(currentPostType, editingPostId);
+            loadCreatePostForm(currentPostType);
         });
     });
 
     // Global function to load create post form
-    window.loadCreatePostForm = function(type = 'marketplace', editId = null) {
+    window.loadCreatePostForm = function(type = 'marketplace') {
         currentPostType = type;
-        editingPostId = editId;
-        const isEditing = editId !== null;
         
-        // Update Modal styling for editing vs creating
-        const modalHeader = document.querySelector('#createPostModal .modal-header h2');
-        const modalDesc = document.querySelector('#createPostModal .modal-body p');
-        const typeSelection = document.querySelector('#createPostModal .post-type-selection');
+        // Update Modal styling for creating
+        const modalHeader = document.querySelector('.modal-header h2');
+        const modalDesc = document.querySelector('.modal-body p');
+        const typeSelection = document.querySelector('.post-type-selection');
         const submitBtn = document.querySelector('.btn-primary');
         
         if (modalHeader) {
-            modalHeader.textContent = isEditing ? 'Edit Post' : 'Create New Post';
+            modalHeader.textContent = 'Create New Post';
         }
         if (modalDesc) {
-            modalDesc.style.display = isEditing ? 'none' : 'block';
+            modalDesc.style.display = 'block';
         }
         if (typeSelection) {
-            typeSelection.style.display = isEditing ? 'none' : 'flex';
+            typeSelection.style.display = 'flex';
         }
 
         // Update active button
@@ -68,22 +65,19 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         if (type === 'service') {
-            loadServiceForm(editId);
+            loadServiceForm();
         } else if (type === 'announcement') {
-            loadAnnouncementForm(editId);
+            loadAnnouncementForm();
         } else {
-            loadMarketplaceForm(editId);
+            loadMarketplaceForm();
         }
     };
 
-    function loadMarketplaceForm(editId = null) {
-        const isEditing = editId !== null;
-        
+    function loadMarketplaceForm() {
         formContainer.innerHTML = `
             <form id="marketplaceForm" class="create-post-form" action="backend/create-post.php" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="action" value="${isEditing ? 'update_post' : 'create_post'}">
+                <input type="hidden" name="action" value="create_post">
                 <input type="hidden" name="post_type" value="marketplace">
-                <input type="hidden" name="post_id" value="${editId || ''}">
                 <input type="hidden" name="csrf_token" id="csrfTokenMarketplace" value="">
                 
                 <div class="input-group">
@@ -176,27 +170,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" id="cancelBtn">Cancel</button>
                     <button type="submit" class="btn-primary" id="createMarketplaceBtn">
-                        ${isEditing ? 'Update' : 'Create'} Post
+                        Create Post
                     </button>
                 </div>
             </form>
         `;
 
         setupMarketplaceFormHandlers();
-        
-        if (isEditing) {
-            loadExistingPostData(editId);
-        }
     }
 
-    function loadServiceForm(editId = null) {
-        const isEditing = editId !== null;
-        
+    function loadServiceForm() {
         formContainer.innerHTML = `
             <form id="serviceForm" class="create-post-form" action="backend/create-post.php" method="POST" enctype="multipart/form-data">
-                <input type="hidden" name="action" value="${isEditing ? 'update_post' : 'create_post'}">
+                <input type="hidden" name="action" value="create_post">
                 <input type="hidden" name="post_type" value="service">
-                <input type="hidden" name="post_id" value="${editId || ''}">
                 <input type="hidden" name="csrf_token" id="csrfTokenService" value="">
                 
                 <div class="input-group">
@@ -299,22 +286,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" id="cancelServiceBtn">Cancel</button>
                     <button type="submit" class="btn-primary" id="createServiceBtn">
-                        ${isEditing ? 'Update' : 'Create'} Post
+                        Create Post
                     </button>
                 </div>
             </form>
         `;
 
         setupServiceFormHandlers();
-        
-        if (isEditing) {
-            loadExistingPostData(editId);
-        }
     }
 
-    function loadAnnouncementForm(editId = null) {
-        const isEditing = editId !== null;
-        
+    function loadAnnouncementForm() {
         formContainer.innerHTML = `
             <form id="announcementForm" class="create-post-form">
                 <div class="input-group">
@@ -384,7 +365,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 <div class="form-actions">
                     <button type="button" class="btn-secondary" onclick="closeCreatePostModal()">Cancel</button>
                     <button type="submit" class="btn-primary">
-                        ${isEditing ? 'Update' : 'Create'} Announcement
+                        Create Announcement
                     </button>
                 </div>
             </form>
@@ -586,14 +567,10 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.images = base64Images;
         }
 
-        if (editingPostId) {
-            formData.post_id = editingPostId;
-        }
-
-        const endpoint = editingPostId ? '/api/posts/update' : '/api/posts/create';
+        const endpoint = '/api/posts/create';
 
         const submitBtn = document.getElementById('createMarketplaceBtn');
-        if (submitBtn) submitBtn.textContent = editingPostId ? 'Updating...' : 'Creating...';
+        if (submitBtn) submitBtn.textContent = 'Creating...';
         
         try {
             const response = await fetch(endpoint, {
@@ -645,14 +622,10 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.images = base64Images;
         }
 
-        if (editingPostId) {
-            formData.post_id = editingPostId;
-        }
-
-        const endpoint = editingPostId ? '/api/posts/update' : '/api/posts/create';
+        const endpoint = '/api/posts/create';
 
         const submitBtn = document.getElementById('createServiceBtn');
-        if (submitBtn) submitBtn.textContent = editingPostId ? 'Updating...' : 'Creating...';
+        if (submitBtn) submitBtn.textContent = 'Creating...';
 
         try {
             const response = await fetch(endpoint, {
@@ -694,14 +667,10 @@ document.addEventListener('DOMContentLoaded', function() {
             description: document.getElementById('announcementDescription').value
         };
 
-        if (editingPostId) {
-            formData.post_id = editingPostId;
-        }
-
-        const endpoint = editingPostId ? '/api/posts/update' : '/api/posts/create';
+        const endpoint = '/api/posts/create';
 
         const submitBtn = document.querySelector('#announcementForm .btn-primary');
-        if (submitBtn) submitBtn.textContent = editingPostId ? 'Updating...' : 'Publishing...';
+        if (submitBtn) submitBtn.textContent = 'Publishing...';
         
         try {
             const response = await fetch(endpoint, {
@@ -726,50 +695,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
-    function loadExistingPostData(postId) {
-        fetch(`/api/posts/${postId}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': 'Bearer ' + getAuthToken(),
-                'X-CSRF-Token': getCsrfToken()
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                populateFormWithData(data.post);
-            }
-        })
-        .catch(error => {
-            console.error('Error loading post data:', error);
-        });
-    }
-
-    function populateFormWithData(postData) {
-        if (currentPostType === 'marketplace') {
-            const fields = ['productName', 'price', 'condition', 'category', 'description'];
-            fields.forEach(field => {
-                const el = document.getElementById(field);
-                if (el && postData[field]) el.value = postData[field];
-            });
-        } else if (currentPostType === 'service') {
-            const fields = ['serviceTitle', 'startingPrice', 'serviceCategory', 'deliveryTime', 'serviceDescription'];
-            fields.forEach(field => {
-                const el = document.getElementById(field);
-                if (el && postData[field]) el.value = postData[field];
-            });
-        } else if (currentPostType === 'announcement') {
-            const fields = ['announcementTitle', 'announcementCategory', 'announcementDescription'];
-            fields.forEach(field => {
-                const el = document.getElementById(field);
-                if (el && postData[field]) el.value = postData[field];
-            });
-        }
-    }
-
     function closeCreatePostModal() {
         if (modal) modal.style.display = 'none';
-        editingPostId = null;
         if (formContainer) formContainer.innerHTML = '';
         
         const modalHeader = document.querySelector('#createPostModal .modal-header h2');
@@ -780,10 +707,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (modalDesc) modalDesc.style.display = 'block';
         if (typeSelection) typeSelection.style.display = 'flex';
         
-        const submitBtn = document.querySelector('.btn-primary');
+        const submitBtn = document.querySelector('#createPostModal .btn-primary');
         if (submitBtn) {
             submitBtn.disabled = false;
-            submitBtn.textContent = submitBtn.textContent.replace('Creating...', 'Create Post').replace('Updating...', 'Update Post').replace('Publishing...', 'Create Announcement');
+            submitBtn.textContent = submitBtn.textContent.replace('Creating...', 'Create Post').replace('Publishing...', 'Create Announcement');
         }
     }
 
