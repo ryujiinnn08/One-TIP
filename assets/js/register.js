@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const payload = Object.fromEntries(formData.entries());
         
         try {
+            // Step 1: Register the user
             const response = await fetch('/api/auth/register', {
                 method: 'POST',
                 headers: {
@@ -31,12 +32,38 @@ document.addEventListener('DOMContentLoaded', function() {
             const data = await response.json();
             
             if (response.ok) {
-                // Success: store temporary data for setup-complete page
+                // Store temporary data for verification page
                 sessionStorage.setItem('temp_user_email', payload.tip_email);
                 sessionStorage.setItem('temp_user_name', payload.first_name);
+                sessionStorage.setItem('temp_user_id', data.user_id);
                 
-                // Redirect
-                window.location.href = 'setup-complete.html';
+                // Step 2: Send verification code
+                signupBtn.textContent = 'Sending verification code...';
+                
+                try {
+                    const codeResponse = await fetch('/api/auth/send-code', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            email: payload.tip_email,
+                            user_id: data.user_id
+                        })
+                    });
+                    
+                    const codeData = await codeResponse.json();
+                    
+                    if (codeResponse.ok) {
+                        // Redirect to email verification page
+                        window.location.href = 'email-verification.html';
+                    } else {
+                        // Account created but code failed — still redirect, user can resend
+                        console.warn('Code send failed, redirecting anyway:', codeData.error);
+                        window.location.href = 'email-verification.html';
+                    }
+                } catch (codeError) {
+                    console.warn('Code send error, redirecting anyway:', codeError);
+                    window.location.href = 'email-verification.html';
+                }
             } else {
                 // Handle API error messages mapping
                 if (data.error && data.error.includes('exists')) {

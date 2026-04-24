@@ -52,28 +52,51 @@ export async function onRequestPost({ request, env }) {
         // Hash the password securely
         const passwordHash = await hashPassword(password);
         
-        // Map student_number to username as per our schema assumption
+        // Map student_number to username as initial default
         const username = student_number;
         
         const db = env.DB;
         
         // Check if user already exists
-        const existingUser = await db.prepare("SELECT email FROM users WHERE email = ? OR username = ?")
-            .bind(tip_email, username)
+        const existingUser = await db.prepare("SELECT email FROM users WHERE email = ? OR username = ? OR student_no = ?")
+            .bind(tip_email, username, student_number)
             .first();
             
         if (existingUser) {
             return new Response(JSON.stringify({ error: 'An account with this email or student number already exists' }), { status: 409 });
         }
         
-        // Insert new user into D1
-        const { success } = await db.prepare(`
-            INSERT INTO users (username, email, password_hash, first_name, last_name, department, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?)
-        `).bind(username, tip_email, passwordHash, first_name, last_name, department, 'unverified').run();
+        // Look up dept_id from departments table
+        let deptId = null;
+        if (department) {
+            const deptMap = {
+                'college_of_arts': 'College of Arts',
+                'college_of_engineering': 'College of Engineering and Architecture',
+                'college_of_computer_science': 'College of Computer Science',
+                'college_of_business': 'College of Business Education'
+            };
+            const deptName = deptMap[department] || department;
+            const dept = await db.prepare("SELECT dept_id FROM departments WHERE dept_name = ? LIMIT 1")
+                .bind(deptName)
+                .first();
+            if (dept) {
+                deptId = dept.dept_id;
+            }
+        }
         
-        if (success) {
-            return new Response(JSON.stringify({ success: true, message: 'Account created successfully' }), {
+        // Insert new user into D1
+        const result = await db.prepare(`
+            INSERT INTO users (username, email, password_hash, first_name, last_name, student_no, dept_id, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, 'unverified')
+            RETURNING user_id
+        `).bind(username, tip_email, passwordHash, first_name, last_name, student_number, deptId).first();
+        
+        if (result && result.user_id) {
+            return new Response(JSON.stringify({ 
+                success: true, 
+                message: 'Account created successfully',
+                user_id: result.user_id
+            }), {
                 status: 201,
                 headers: { 'Content-Type': 'application/json' }
             });

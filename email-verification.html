@@ -27,10 +27,7 @@
                 <h2>Verify your email</h2>
                 <p class="description">We've sent a 6-digit verification code to <strong id="userEmail">mfaruzgal@tip.edu.ph</strong></p>
                 
-                <form id="emailVerificationForm" class="email-form" action="backend/verify-email.php" method="POST">
-                    <input type="hidden" name="action" value="verify_email">
-                    <input type="hidden" name="user_id" id="userId" value="">
-                    <input type="hidden" name="csrf_token" id="csrfToken" value="">
+                <form id="emailVerificationForm" class="email-form">
                     
                     <div class="input-group">
                         <label for="verificationCode">Verification Code</label>

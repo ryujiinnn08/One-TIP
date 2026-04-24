@@ -9,26 +9,35 @@ export async function onRequestGet({ request, env }) {
 
         const db = env.DB;
 
-        // Fetch counts for dashboard stats
-        const marketplaceCountQuery = db.prepare(`SELECT COUNT(*) as count FROM posts WHERE type = 'marketplace' AND user_id = ?`).bind(userId);
-        const serviceCountQuery = db.prepare(`SELECT COUNT(*) as count FROM posts WHERE type = 'service' AND user_id = ?`).bind(userId);
-        const likesCountQuery = db.prepare(`SELECT COUNT(*) as count FROM likes WHERE post_user_id = ?`).bind(userId);
-        const vouchesCountQuery = db.prepare(`SELECT COUNT(*) as count FROM vouches WHERE receiver_id = ?`).bind(userId);
+        // Fetch counts for dashboard stats from normalized tables
+        const marketplaceCountQuery = db.prepare(
+            `SELECT COUNT(*) as count FROM marketplace_items WHERE seller_id = ?`
+        ).bind(userId);
+        
+        const serviceCountQuery = db.prepare(
+            `SELECT COUNT(*) as count FROM service_offers WHERE provider_id = ?`
+        ).bind(userId);
+        
+        const vouchesCountQuery = db.prepare(
+            `SELECT COUNT(*) as count FROM vouches WHERE vouchee_id = ?`
+        ).bind(userId);
 
-        const [marketplace, service, likes, vouches] = await db.batch([
+        const reviewsCountQuery = db.prepare(
+            `SELECT COUNT(*) as count FROM reviews WHERE target_id = ?`
+        ).bind(userId);
+
+        const [marketplace, service, vouches, reviews] = await db.batch([
             marketplaceCountQuery,
             serviceCountQuery,
-            likesCountQuery,
-            vouchesCountQuery
+            vouchesCountQuery,
+            reviewsCountQuery
         ]);
 
         return new Response(JSON.stringify({
             marketplace_count: marketplace.results[0].count || 0,
             service_count: service.results[0].count || 0,
-            total_likes: likes.results[0].count || 0,
             total_vouches: vouches.results[0].count || 0,
-            likes_this_week: 0, // Simplified for now
-            vouches_this_month: 0 // Simplified for now
+            total_reviews: reviews.results[0].count || 0
         }), {
             status: 200,
             headers: { 'Content-Type': 'application/json' }

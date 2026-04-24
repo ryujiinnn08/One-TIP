@@ -1,62 +1,81 @@
-export async function onRequestGet({ env, params }) {
+export async function onRequestGet({ env, request }) {
     try {
-        const postId = params.id;
+        const url = new URL(request.url);
+        const postId = url.searchParams.get('id');
+        const postType = url.searchParams.get('type') || 'marketplace';
+
         if (!postId) {
             return new Response(JSON.stringify({ error: 'Post ID is required' }), { status: 400 });
         }
 
         const db = env.DB;
-        
-        // Fetch the post details
-        const post = await db.prepare(`
-            SELECT p.*, u.username as seller_username, u.department as seller_department, 
-                   u.rating as seller_rating, u.profile_image_url as seller_avatar
-            FROM posts p
-            LEFT JOIN users u ON p.user_id = u.id
-            WHERE p.id = ?
-        `).bind(postId).first();
+        let post;
+        let images = [];
+
+        if (postType === 'marketplace') {
+            post = await db.prepare(`
+                SELECT m.*, u.username as seller_username, 
+                       d.dept_name as seller_department,
+                       u.profile_photo as seller_avatar,
+                       (SELECT AVG(r.rating) FROM reviews r WHERE r.target_id = u.user_id) as seller_rating
+                FROM marketplace_items m
+                LEFT JOIN users u ON m.seller_id = u.user_id
+                LEFT JOIN departments d ON u.dept_id = d.dept_id
+                WHERE m.item_id = ?
+            `).bind(postId).first();
+
+            if (post) {
+                const { results } = await db.prepare(
+                    "SELECT image_url, is_main FROM post_images WHERE item_type = 'marketplace' AND item_id = ? ORDER BY is_main DESC, id ASC"
+                ).bind(postId).all();
+                if (results) images = results;
+
+                post = {
+                    ...post,
+                    id: post.item_id,
+                    type: 'marketplace',
+                    productName: post.title,
+                    user_id: post.seller_id
+                };
+            }
+        } else if (postType === 'service') {
+            post = await db.prepare(`
+                SELECT s.*, u.username as seller_username,
+                       d.dept_name as seller_department,
+                       u.profile_photo as seller_avatar,
+                       (SELECT AVG(r.rating) FROM reviews r WHERE r.target_id = u.user_id) as seller_rating
+                FROM service_offers s
+                LEFT JOIN users u ON s.provider_id = u.user_id
+                LEFT JOIN departments d ON u.dept_id = d.dept_id
+                WHERE s.service_id = ?
+            `).bind(postId).first();
+
+            if (post) {
+                const { results } = await db.prepare(
+                    "SELECT image_url, is_main FROM post_images WHERE item_type = 'service' AND item_id = ? ORDER BY is_main DESC, id ASC"
+                ).bind(postId).all();
+                if (results) images = results;
+
+                post = {
+                    ...post,
+                    id: post.service_id,
+                    type: 'service',
+                    serviceTitle: post.title,
+                    startingPrice: post.starting_price,
+                    serviceCategory: post.category,
+                    serviceDescription: post.description,
+                    user_id: post.provider_id
+                };
+            }
+        }
 
         if (!post) {
             return new Response(JSON.stringify({ error: 'Post not found' }), { status: 404 });
         }
 
-        // We fetch images if applicable (only for marketplace and services)
-        let images = [];
-        if (post.type !== 'announcement') {
-            const { results } = await db.prepare("SELECT image_url, is_main FROM post_images WHERE post_id = ? ORDER BY is_main DESC, id ASC")
-                .bind(postId).all();
-            if (results) images = results;
-        }
-
-        // Map column names for frontend fields
-        let mappedPost = { ...post };
-        if (post.type === 'marketplace') {
-            mappedPost = {
-                ...mappedPost,
-                productName: post.title,
-                condition: post.condition_status
-            };
-        } else if (post.type === 'service') {
-            mappedPost = {
-                ...mappedPost,
-                serviceTitle: post.title,
-                startingPrice: post.price,
-                serviceCategory: post.category,
-                serviceDescription: post.description,
-                deliveryTime: post.condition_status  // Reused field
-            };
-        } else if (post.type === 'announcement') {
-            mappedPost = {
-                ...mappedPost,
-                announcementTitle: post.title,
-                announcementCategory: post.category,
-                announcementDescription: post.description
-            };
-        }
-
         return new Response(JSON.stringify({
             success: true,
-            post: mappedPost,
+            post: post,
             images: images
         }), {
             status: 200,
@@ -71,26 +90,31 @@ export async function onRequestGet({ env, params }) {
         return new Response(JSON.stringify({ error: 'Database error while fetching post' }), { status: 500 });
     }
 }
-export async function onRequestDelete({ request, env, params }) {
+
+export async function onRequestDelete({ request, env }) {
     try {
-        const postId = params.id;
+        const url = new URL(request.url);
+        const postId = url.searchParams.get('id');
+        const postType = url.searchParams.get('type') || 'marketplace';
         
         if (!postId) {
             return new Response(JSON.stringify({ error: 'Post ID is required' }), { status: 400 });
         }
         
-        // Find user_id from auth header since we don't have a formal session middleware yet
-        const authHeader = request.headers.get('Authorization');
-        if (!authHeader || !authHeader.startsWith('Bearer ')) {
-            // For now, in MVP we might not strictly enforce token validation here if it's missing the actual extraction
-            // A secure implementation would decode JWT or hit session store.
-            // Assuming dashboard.js delete fetch passes something we can't fully trust yet... wait!
-            // Actually, for MVP let's do a basic delete since it's hard to get user_id securely here without JWT logic.
-        }
-        
         const db = env.DB;
+        let success;
+
+        // Delete associated images first
+        await db.prepare("DELETE FROM post_images WHERE item_type = ? AND item_id = ?")
+            .bind(postType, postId).run();
         
-        const { success } = await db.prepare("DELETE FROM posts WHERE id = ?").bind(postId).run();
+        if (postType === 'marketplace') {
+            const result = await db.prepare("DELETE FROM marketplace_items WHERE item_id = ?").bind(postId).run();
+            success = result.success;
+        } else if (postType === 'service') {
+            const result = await db.prepare("DELETE FROM service_offers WHERE service_id = ?").bind(postId).run();
+            success = result.success;
+        }
         
         if (success) {
             return new Response(JSON.stringify({ 

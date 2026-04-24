@@ -2,22 +2,23 @@ export async function onRequestGet({ env }) {
     try {
         const db = env.DB;
         
-        // Fetch marketplace posts and join with users to get seller info
+        // Fetch marketplace items with seller info and category
         const { results } = await db.prepare(`
             SELECT 
-                p.id, p.title, p.price, p.condition_status as condition, 
-                p.category, p.description, p.created_at, p.views_count,
+                m.item_id as id, m.title, m.price, m.condition,
+                c.name as category, m.description, m.created_at,
                 u.first_name || ' ' || u.last_name as seller_name, 
-                u.department as seller_department,
-                u.id as seller_id,
-                (SELECT COUNT(*) FROM vouches WHERE post_id = p.id) as vouch_count,
-                (SELECT COUNT(*) FROM vouches WHERE receiver_id = u.id) as seller_vouches,
-                (SELECT image_url FROM post_images WHERE post_id = p.id AND is_main = 1 LIMIT 1) as main_image,
-                (SELECT image_url FROM post_images WHERE post_id = p.id AND is_main = 0 LIMIT 1) as sub_image
-            FROM posts p
-            JOIN users u ON p.user_id = u.id
-            WHERE p.type = 'marketplace' AND p.status = 'active'
-            ORDER BY p.created_at DESC
+                d.dept_name as seller_department,
+                u.user_id as seller_id,
+                (SELECT COUNT(*) FROM vouches WHERE vouchee_id = u.user_id) as seller_vouches,
+                (SELECT image_url FROM post_images WHERE item_type = 'marketplace' AND item_id = m.item_id AND is_main = 1 LIMIT 1) as main_image,
+                (SELECT image_url FROM post_images WHERE item_type = 'marketplace' AND item_id = m.item_id AND is_main = 0 LIMIT 1) as sub_image
+            FROM marketplace_items m
+            JOIN users u ON m.seller_id = u.user_id
+            LEFT JOIN departments d ON u.dept_id = d.dept_id
+            LEFT JOIN categories c ON m.category_id = c.category_id
+            WHERE m.status = 'active'
+            ORDER BY m.created_at DESC
         `).all();
         
         // Post-process to structure images array
@@ -33,12 +34,11 @@ export async function onRequestGet({ env }) {
             return {
                 ...post,
                 images: images,
-                vouch_count: post.vouch_count || 0,
+                type: 'marketplace',
                 seller_vouches: post.seller_vouches || 0
             };
         });
 
-        // D1 returns an array of objects in results
         return new Response(JSON.stringify({
             success: true,
             posts: processedPosts
@@ -58,4 +58,3 @@ export async function onRequestGet({ env }) {
         });
     }
 }
-

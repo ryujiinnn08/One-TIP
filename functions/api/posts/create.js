@@ -4,12 +4,13 @@ export async function onRequestPost({ request, env }) {
         
         const { 
             user_id, 
-            type, // 'marketplace', 'service', 'announcement'
+            type, // 'marketplace' or 'service'
             title, 
             description, 
             price = 0, 
-            category, 
-            condition_status = null,
+            category,
+            condition = null,
+            delivery_time = null,
             images = []
         } = body;
         
@@ -23,44 +24,73 @@ export async function onRequestPost({ request, env }) {
         
         const db = env.DB;
         
-        // Insert into D1 posts table
-        // We use returning so we can send the response back ID
-        const result = await db.prepare(`
-            INSERT INTO posts (user_id, type, title, description, price, category, condition_status, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, 'active') 
-            RETURNING id
-        `).bind(
-            user_id,
-            type,
-            title,
-            description,
-            parseFloat(price) || 0.0,
-            category || '',
-            condition_status
-        ).first();
+        // Look up category_id if category name provided
+        let categoryId = null;
+        if (category) {
+            const cat = await db.prepare(
+                "SELECT category_id FROM categories WHERE name = ? AND type = ? LIMIT 1"
+            ).bind(category, type).first();
+            if (cat) categoryId = cat.category_id;
+        }
         
-        if (result && result.id) {
-            
+        let result;
+        let itemType;
+        
+        if (type === 'marketplace') {
+            itemType = 'marketplace';
+            result = await db.prepare(`
+                INSERT INTO marketplace_items (seller_id, title, description, price, condition, category_id, status)
+                VALUES (?, ?, ?, ?, ?, ?, 'active')
+                RETURNING item_id
+            `).bind(
+                user_id,
+                title,
+                description,
+                parseFloat(price) || 0.0,
+                condition,
+                categoryId
+            ).first();
+        } else if (type === 'service') {
+            itemType = 'service';
+            result = await db.prepare(`
+                INSERT INTO service_offers (provider_id, title, description, starting_price, category_id, delivery_time, status)
+                VALUES (?, ?, ?, ?, ?, ?, 'active')
+                RETURNING service_id
+            `).bind(
+                user_id,
+                title,
+                description,
+                parseFloat(price) || 0.0,
+                categoryId,
+                delivery_time
+            ).first();
+        } else {
+            return new Response(JSON.stringify({ error: 'Invalid post type. Must be "marketplace" or "service".' }), { status: 400 });
+        }
+        
+        const itemId = result ? (result.item_id || result.service_id) : null;
+        
+        if (itemId) {
             // Insert images if provided
             if (images && images.length > 0) {
                 try {
                     const stmts = images.map((img, index) => {
                         return db.prepare(`
-                            INSERT INTO post_images (post_id, image_url, is_main)
-                            VALUES (?, ?, ?)
-                        `).bind(result.id, img, index === 0 ? 1 : 0);
+                            INSERT INTO post_images (item_type, item_id, image_url, is_main)
+                            VALUES (?, ?, ?, ?)
+                        `).bind(itemType, itemId, img, index === 0 ? 1 : 0);
                     });
                     await db.batch(stmts);
                 } catch (imgError) {
                     console.error("Failed to save images:", imgError);
-                    // Decide if you want to fail the whole post or just ignore images
                 }
             }
 
             return new Response(JSON.stringify({ 
                 success: true, 
                 message: 'Post created successfully',
-                post_id: result.id
+                post_id: itemId,
+                type: itemType
             }), {
                 status: 201,
                 headers: { 'Content-Type': 'application/json' }

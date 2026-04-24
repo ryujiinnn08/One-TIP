@@ -2,27 +2,28 @@ export async function onRequestGet({ env }) {
     try {
         const db = env.DB;
         
-        // Fetch service posts and join with users to get provider info
+        // Fetch service offers with provider info and category
         const { results } = await db.prepare(`
             SELECT 
-                p.id, p.title, p.price,
-                p.category, p.description, p.created_at, p.views_count,
-                p.condition_status as delivery_time,
+                s.service_id as id, s.title, s.starting_price as price,
+                c.name as category, s.description, s.created_at,
+                s.delivery_time,
                 u.first_name || ' ' || u.last_name as seller_name, 
                 u.first_name || ' ' || u.last_name as provider_name,
-                u.department as seller_department,
-                u.department as provider_department,
-                u.id as seller_id,
-                u.rating as provider_rating,
-                (SELECT COUNT(*) FROM vouches WHERE post_id = p.id) as vouch_count,
-                (SELECT COUNT(*) FROM vouches WHERE receiver_id = u.id) as seller_vouches,
-                (SELECT COUNT(*) FROM vouches WHERE receiver_id = u.id) as provider_reviews,
-                (SELECT image_url FROM post_images WHERE post_id = p.id AND is_main = 1 LIMIT 1) as main_image,
-                (SELECT image_url FROM post_images WHERE post_id = p.id AND is_main = 0 LIMIT 1) as sub_image
-            FROM posts p
-            JOIN users u ON p.user_id = u.id
-            WHERE p.type = 'service' AND p.status = 'active'
-            ORDER BY p.created_at DESC
+                d.dept_name as seller_department,
+                d.dept_name as provider_department,
+                u.user_id as seller_id,
+                (SELECT COUNT(*) FROM vouches WHERE vouchee_id = u.user_id) as seller_vouches,
+                (SELECT COUNT(*) FROM vouches WHERE vouchee_id = u.user_id) as provider_reviews,
+                (SELECT AVG(r.rating) FROM reviews r WHERE r.target_id = u.user_id) as provider_rating,
+                (SELECT image_url FROM post_images WHERE item_type = 'service' AND item_id = s.service_id AND is_main = 1 LIMIT 1) as main_image,
+                (SELECT image_url FROM post_images WHERE item_type = 'service' AND item_id = s.service_id AND is_main = 0 LIMIT 1) as sub_image
+            FROM service_offers s
+            JOIN users u ON s.provider_id = u.user_id
+            LEFT JOIN departments d ON u.dept_id = d.dept_id
+            LEFT JOIN categories c ON s.category_id = c.category_id
+            WHERE s.status = 'active'
+            ORDER BY s.created_at DESC
         `).all();
         
         // Post-process to structure images array
@@ -37,7 +38,7 @@ export async function onRequestGet({ env }) {
             return {
                 ...post,
                 images: images,
-                vouch_count: post.vouch_count || 0,
+                type: 'service',
                 seller_vouches: post.seller_vouches || 0,
                 provider_rating: post.provider_rating || 0,
                 provider_reviews: post.provider_reviews || 0
