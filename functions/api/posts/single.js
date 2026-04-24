@@ -1,7 +1,8 @@
-export async function onRequestGet({ env, request }) {
+export async function onRequestGet({ env, request, params }) {
     try {
         const url = new URL(request.url);
-        const postId = url.searchParams.get('id');
+        // Support both query params (?id=X&type=Y) and URL params (/api/posts/X)
+        const postId = url.searchParams.get('id') || (params && params.id);
         const postType = url.searchParams.get('type') || 'marketplace';
 
         if (!postId) {
@@ -17,10 +18,12 @@ export async function onRequestGet({ env, request }) {
                 SELECT m.*, u.username as seller_username, 
                        d.dept_name as seller_department,
                        u.profile_photo as seller_avatar,
+                       c.name as category_name,
                        (SELECT AVG(r.rating) FROM reviews r WHERE r.target_id = u.user_id) as seller_rating
                 FROM marketplace_items m
                 LEFT JOIN users u ON m.seller_id = u.user_id
                 LEFT JOIN departments d ON u.dept_id = d.dept_id
+                LEFT JOIN categories c ON m.category_id = c.category_id
                 WHERE m.item_id = ?
             `).bind(postId).first();
 
@@ -34,7 +37,6 @@ export async function onRequestGet({ env, request }) {
                     ...post,
                     id: post.item_id,
                     type: 'marketplace',
-                    productName: post.title,
                     user_id: post.seller_id
                 };
             }
@@ -43,10 +45,12 @@ export async function onRequestGet({ env, request }) {
                 SELECT s.*, u.username as seller_username,
                        d.dept_name as seller_department,
                        u.profile_photo as seller_avatar,
+                       c.name as category_name,
                        (SELECT AVG(r.rating) FROM reviews r WHERE r.target_id = u.user_id) as seller_rating
                 FROM service_offers s
                 LEFT JOIN users u ON s.provider_id = u.user_id
                 LEFT JOIN departments d ON u.dept_id = d.dept_id
+                LEFT JOIN categories c ON s.category_id = c.category_id
                 WHERE s.service_id = ?
             `).bind(postId).first();
 
@@ -60,10 +64,6 @@ export async function onRequestGet({ env, request }) {
                     ...post,
                     id: post.service_id,
                     type: 'service',
-                    serviceTitle: post.title,
-                    startingPrice: post.starting_price,
-                    serviceCategory: post.category,
-                    serviceDescription: post.description,
                     user_id: post.provider_id
                 };
             }

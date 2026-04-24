@@ -62,12 +62,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         <label for="editCondition">Condition *</label>
                         <select id="editCondition" name="condition" required>
                             <option value="">Select condition</option>
-                            <option value="new">Brand New</option>
-                            <option value="like_new">Like New</option>
-                            <option value="excellent">Excellent</option>
-                            <option value="good">Good</option>
-                            <option value="fair">Fair</option>
-                            <option value="poor">Poor</option>
+                            <option value="Brand New">Brand New</option>
+                            <option value="Like New">Like New</option>
+                            <option value="Good">Good</option>
+                            <option value="Fair">Fair</option>
                         </select>
                     </div>
                 </div>
@@ -76,16 +74,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     <label for="editCategory">Category *</label>
                     <select id="editCategory" name="category" required>
                         <option value="">Select category</option>
-                        <option value="electronics">Electronics</option>
-                        <option value="books">Books & Textbooks</option>
-                        <option value="clothing">Clothing & Accessories</option>
-                        <option value="furniture">Furniture</option>
-                        <option value="sports">Sports & Recreation</option>
-                        <option value="musical_instruments">Musical Instruments</option>
-                        <option value="automotive">Automotive</option>
-                        <option value="home_garden">Home & Garden</option>
-                        <option value="art_crafts">Art & Crafts</option>
-                        <option value="other">Other</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Books & Notes">Books & Notes</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="School Supplies">School Supplies</option>
+                        <option value="Food & Beverages">Food & Beverages</option>
+                        <option value="Others">Others</option>
                     </select>
                 </div>
                 
@@ -95,7 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
                 
                 <div class="input-group">
-                    <label for="editImages">Upload New Images (Opional - Replaces Old)</label>
+                    <label for="editImages">Upload New Images (Optional - Replaces Old)</label>
                     <div class="upload-area" id="editUploadArea">
                         <div class="upload-icon">
                             <img src="Images/folder-icon.svg" alt="Upload" style="width: 48px; height: 48px; filter: brightness(0) saturate(100%) invert(50%);">
@@ -147,16 +141,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         <label for="editServiceCategory">Category *</label>
                         <select id="editServiceCategory" name="service_category" required>
                             <option value="">Select category</option>
-                            <option value="tutoring">Tutoring & Education</option>
-                            <option value="design">Graphic Design</option>
-                            <option value="writing">Writing & Translation</option>
-                            <option value="programming">Programming & Tech</option>
-                            <option value="photography">Photography & Video</option>
-                            <option value="music">Music & Audio</option>
-                            <option value="business">Business & Marketing</option>
-                            <option value="lifestyle">Lifestyle Services</option>
-                            <option value="crafts">Arts & Crafts</option>
-                            <option value="other">Other</option>
+                            <option value="Tutoring">Tutoring</option>
+                            <option value="Design & Creative">Design & Creative</option>
+                            <option value="Tech & Programming">Tech & Programming</option>
+                            <option value="Writing & Editing">Writing & Editing</option>
+                            <option value="Errands & Delivery">Errands & Delivery</option>
+                            <option value="Others">Others</option>
                         </select>
                     </div>
                 </div>
@@ -259,7 +249,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function loadExistingPostData(postId) {
-        fetch('/api/posts/' + postId, {
+        // Pass the type so the backend queries the correct table
+        fetch(`/api/posts/${postId}?type=${currentEditType}`, {
             method: 'GET',
             headers: {
                 'Authorization': 'Bearer ' + (sessionStorage.getItem('auth_token') || localStorage.getItem('auth_token') || ''),
@@ -278,39 +269,41 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function populateFormWithData(postData) {
         if (currentEditType === 'marketplace') {
-            const fields = {
-                'productName': 'editProductName', 
-                'price': 'editPrice', 
-                'condition': 'editCondition', 
-                'category': 'editCategory', 
-                'description': 'editDescription'
-            };
-            for (let source in fields) {
-                const el = document.getElementById(fields[source]);
-                if (el && postData[source]) el.value = postData[source];
-            }
+            // API returns: title, price, condition, category_name, description
+            const titleEl = document.getElementById('editProductName');
+            const priceEl = document.getElementById('editPrice');
+            const conditionEl = document.getElementById('editCondition');
+            const categoryEl = document.getElementById('editCategory');
+            const descEl = document.getElementById('editDescription');
+
+            if (titleEl && postData.title) titleEl.value = postData.title;
+            if (priceEl && postData.price != null) priceEl.value = postData.price;
+            if (conditionEl && postData.condition) conditionEl.value = postData.condition;
+            if (categoryEl && postData.category_name) categoryEl.value = postData.category_name;
+            if (descEl && postData.description) descEl.value = postData.description;
+
         } else if (currentEditType === 'service') {
-            const fields = {
-                'serviceTitle': 'editServiceTitle', 
-                'startingPrice': 'editStartingPrice', 
-                'serviceCategory': 'editServiceCategory', 
-                'deliveryTime': 'editDeliveryTime', 
-                'serviceDescription': 'editServiceDescription'
-            };
-            for (let source in fields) {
-                const el = document.getElementById(fields[source]);
-                if (el && postData[source]) el.value = postData[source];
-            }
+            // API returns: title, starting_price, category_name, delivery_time, description
+            const titleEl = document.getElementById('editServiceTitle');
+            const priceEl = document.getElementById('editStartingPrice');
+            const categoryEl = document.getElementById('editServiceCategory');
+            const deliveryEl = document.getElementById('editDeliveryTime');
+            const descEl = document.getElementById('editServiceDescription');
+
+            if (titleEl && postData.title) titleEl.value = postData.title;
+            if (priceEl && postData.starting_price != null) priceEl.value = postData.starting_price;
+            if (categoryEl && postData.category_name) categoryEl.value = postData.category_name;
+            if (deliveryEl && postData.delivery_time) deliveryEl.value = postData.delivery_time;
+            if (descEl && postData.description) descEl.value = postData.description;
+
         } else if (currentEditType === 'announcement') {
-            const fields = {
-                'announcementTitle': 'editAnnouncementTitle', 
-                'announcementCategory': 'editAnnouncementCategory', 
-                'announcementDescription': 'editAnnouncementDescription'
-            };
-            for (let source in fields) {
-                const el = document.getElementById(fields[source]);
-                if (el && postData[source]) el.value = postData[source];
-            }
+            const titleEl = document.getElementById('editAnnouncementTitle');
+            const categoryEl = document.getElementById('editAnnouncementCategory');
+            const descEl = document.getElementById('editAnnouncementDescription');
+
+            if (titleEl && postData.title) titleEl.value = postData.title;
+            if (categoryEl && postData.category) categoryEl.value = postData.category;
+            if (descEl && postData.description) descEl.value = postData.description;
         }
     }
 
@@ -394,24 +387,24 @@ document.addEventListener('DOMContentLoaded', function() {
         const userId = sessionStorage.getItem('user_id');
         if (!userId) return;
 
-        let title, category, description, price, condition_status;
+        let title, category, description, price, condition;
         
         if (currentEditType === 'marketplace') {
             title = document.getElementById('editProductName').value;
             price = document.getElementById('editPrice').value;
-            condition_status = document.getElementById('editCondition').value;
+            condition = document.getElementById('editCondition').value;
             category = document.getElementById('editCategory').value;
             description = document.getElementById('editDescription').value;
         } else if (currentEditType === 'service') {
             title = document.getElementById('editServiceTitle').value;
             price = document.getElementById('editStartingPrice').value;
-            condition_status = null;
+            condition = null;
             category = document.getElementById('editServiceCategory').value;
             description = document.getElementById('editServiceDescription').value;
         } else if (currentEditType === 'announcement') {
             title = document.getElementById('editAnnouncementTitle').value;
             price = null;
-            condition_status = null;
+            condition = null;
             category = document.getElementById('editAnnouncementCategory').value;
             description = document.getElementById('editAnnouncementDescription').value;
         }
@@ -424,9 +417,14 @@ document.addEventListener('DOMContentLoaded', function() {
             category: category,
             description: description,
             price: price,
-            condition_status: condition_status
+            condition: condition
         };
         
+        // Add delivery_time for services
+        if (currentEditType === 'service') {
+            formData.delivery_time = document.getElementById('editDeliveryTime').value;
+        }
+
         let imageInput = null;
         if (currentEditType === 'marketplace') {
             imageInput = document.getElementById('editImages');
