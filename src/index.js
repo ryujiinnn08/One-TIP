@@ -1,5 +1,7 @@
 import { onRequestPost as registerHandler } from '../functions/api/auth/register.js';
 import { onRequestPost as loginHandler } from '../functions/api/auth/login.js';
+import { onRequestPost as sendCodeHandler } from '../functions/api/auth/send-code.js';
+import { onRequestPost as verifyCodeHandler } from '../functions/api/auth/verify-code.js';
 import { onRequestPost as createPostHandler } from '../functions/api/posts/create.js';
 import { onRequestGet as marketplaceHandler } from '../functions/api/posts/marketplace.js';
 import { onRequestGet as servicesHandler } from '../functions/api/posts/services.js';
@@ -18,13 +20,21 @@ export default {
         const context = { request, env, ctx, params: {} };
 
         try {
-            // API Routes
+            // Auth Routes
             if (path === '/api/auth/register' && method === 'POST') {
                 return await registerHandler(context);
             }
             if (path === '/api/auth/login' && method === 'POST') {
                 return await loginHandler(context);
             }
+            if (path === '/api/auth/send-code' && method === 'POST') {
+                return await sendCodeHandler(context);
+            }
+            if (path === '/api/auth/verify-code' && method === 'POST') {
+                return await verifyCodeHandler(context);
+            }
+
+            // Post Routes
             if (path === '/api/posts/create' && method === 'POST') {
                 return await createPostHandler(context);
             }
@@ -32,7 +42,17 @@ export default {
                 return await updatePostHandler(context);
             }
 
-            // Dynamic routes for single post
+            // Single post (GET/DELETE) - uses query params ?id=&type=
+            if (path === '/api/posts/single' && (method === 'GET' || method === 'DELETE')) {
+                if (method === 'GET') {
+                    return await getPostHandler(context);
+                }
+                if (method === 'DELETE') {
+                    return await deletePostHandler(context);
+                }
+            }
+
+            // Legacy dynamic route for single post (backwards compatibility)
             const postMatch = path.match(/^\/api\/posts\/(\d+)$/);
             if (postMatch) {
                 context.params.id = postMatch[1];
