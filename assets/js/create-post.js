@@ -94,12 +94,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         <label for="condition">Condition *</label>
                         <select id="condition" name="condition" required>
                             <option value="">Select condition</option>
-                            <option value="new">Brand New</option>
-                            <option value="like_new">Like New</option>
-                            <option value="excellent">Excellent</option>
-                            <option value="good">Good</option>
-                            <option value="fair">Fair</option>
-                            <option value="poor">Poor</option>
+                            <option value="Brand New">Brand New</option>
+                            <option value="Like New">Like New</option>
+                            <option value="Good">Good</option>
+                            <option value="Fair">Fair</option>
                         </select>
                     </div>
                 </div>
@@ -108,16 +106,12 @@ document.addEventListener('DOMContentLoaded', function() {
                     <label for="category">Category *</label>
                     <select id="category" name="category" required>
                         <option value="">Select category</option>
-                        <option value="electronics">Electronics</option>
-                        <option value="books">Books & Textbooks</option>
-                        <option value="clothing">Clothing & Accessories</option>
-                        <option value="furniture">Furniture</option>
-                        <option value="sports">Sports & Recreation</option>
-                        <option value="musical_instruments">Musical Instruments</option>
-                        <option value="automotive">Automotive</option>
-                        <option value="home_garden">Home & Garden</option>
-                        <option value="art_crafts">Art & Crafts</option>
-                        <option value="other">Other</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Books & Notes">Books & Notes</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="School Supplies">School Supplies</option>
+                        <option value="Food & Beverages">Food & Beverages</option>
+                        <option value="Others">Others</option>
                     </select>
                 </div>
                 
@@ -200,16 +194,12 @@ document.addEventListener('DOMContentLoaded', function() {
                         <label for="serviceCategory">Category *</label>
                         <select id="serviceCategory" name="service_category" required>
                             <option value="">Select category</option>
-                            <option value="tutoring">Tutoring & Education</option>
-                            <option value="design">Graphic Design</option>
-                            <option value="writing">Writing & Translation</option>
-                            <option value="programming">Programming & Tech</option>
-                            <option value="photography">Photography & Video</option>
-                            <option value="music">Music & Audio</option>
-                            <option value="business">Business & Marketing</option>
-                            <option value="lifestyle">Lifestyle Services</option>
-                            <option value="crafts">Arts & Crafts</option>
-                            <option value="other">Other</option>
+                            <option value="Tutoring">Tutoring</option>
+                            <option value="Design & Creative">Design & Creative</option>
+                            <option value="Tech & Programming">Tech & Programming</option>
+                            <option value="Writing & Editing">Writing & Editing</option>
+                            <option value="Errands & Delivery">Errands & Delivery</option>
+                            <option value="Others">Others</option>
                         </select>
                     </div>
                 </div>
@@ -553,7 +543,7 @@ document.addEventListener('DOMContentLoaded', function() {
             type: 'marketplace',
             title: document.getElementById('productName').value,
             price: document.getElementById('price').value,
-            condition_status: document.getElementById('condition').value,
+            condition: document.getElementById('condition').value,
             category: document.getElementById('category').value,
             description: document.getElementById('description').value
         };
