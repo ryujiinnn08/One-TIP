@@ -91,29 +91,42 @@ export async function onRequestGet({ env, request }) {
     }
 }
 
-export async function onRequestDelete({ request, env }) {
+export async function onRequestDelete({ request, env, params }) {
     try {
         const url = new URL(request.url);
-        const postId = url.searchParams.get('id');
-        const postType = url.searchParams.get('type') || 'marketplace';
+        // Support both query params (?id=X) and URL params (/api/posts/X)
+        const postId = url.searchParams.get('id') || (params && params.id);
+        const postType = url.searchParams.get('type');
         
         if (!postId) {
             return new Response(JSON.stringify({ error: 'Post ID is required' }), { status: 400 });
         }
         
         const db = env.DB;
-        let success;
+        let success = false;
 
-        // Delete associated images first
-        await db.prepare("DELETE FROM post_images WHERE item_type = ? AND item_id = ?")
-            .bind(postType, postId).run();
-        
-        if (postType === 'marketplace') {
-            const result = await db.prepare("DELETE FROM marketplace_items WHERE item_id = ?").bind(postId).run();
-            success = result.success;
-        } else if (postType === 'service') {
+        if (postType === 'service') {
+            // Delete from service_offers
+            await db.prepare("DELETE FROM post_images WHERE item_type = 'service' AND item_id = ?")
+                .bind(postId).run();
             const result = await db.prepare("DELETE FROM service_offers WHERE service_id = ?").bind(postId).run();
             success = result.success;
+        } else if (postType === 'marketplace') {
+            // Delete from marketplace_items
+            await db.prepare("DELETE FROM post_images WHERE item_type = 'marketplace' AND item_id = ?")
+                .bind(postId).run();
+            const result = await db.prepare("DELETE FROM marketplace_items WHERE item_id = ?").bind(postId).run();
+            success = result.success;
+        } else {
+            // No type specified — try both tables (marketplace first, then service)
+            await db.prepare("DELETE FROM post_images WHERE item_id = ?").bind(postId).run();
+            const mResult = await db.prepare("DELETE FROM marketplace_items WHERE item_id = ?").bind(postId).run();
+            if (mResult.meta && mResult.meta.changes > 0) {
+                success = true;
+            } else {
+                const sResult = await db.prepare("DELETE FROM service_offers WHERE service_id = ?").bind(postId).run();
+                success = sResult.meta && sResult.meta.changes > 0;
+            }
         }
         
         if (success) {

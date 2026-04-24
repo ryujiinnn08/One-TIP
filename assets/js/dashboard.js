@@ -334,7 +334,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function handleDeleteListing(id, type) {
         if (confirm('Are you sure you want to delete this listing?')) {
-            fetch(`/api/posts/${id}`, {
+            fetch(`/api/posts/${id}?type=${type}`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': 'Bearer ' + getAuthToken(),
@@ -350,7 +350,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
                         loadDashboardStats();
                     } else {
-                        alert('Error deleting listing: ' + data.message);
+                        alert('Error deleting listing: ' + (data.error || data.message));
                     }
                 })
                 .catch(error => {
